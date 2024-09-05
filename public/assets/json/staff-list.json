@@ -1,0 +1,63 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "full_name": "Sochika BASIL",
+      "role": "CSS",
+      "phone_number": "08037158508",
+      "gender": "binary",
+      "avatar": "avatars/3vhX6lDyfBGbB1uBYoSdjN9ljSE9s9vhmSGGnntn.png",
+      "date_of_birth": "2024-07-05",
+      "beat": "Such Tree Solutions LTD",
+      "beat_address": {
+        "id": 2,
+        "beat_id": 1,
+        "name": "Such Tree Solutions LTD Rumumaosi",
+        "phone_number": "08037158508",
+        "address": "peter odili",
+        "landmark": null,
+        "area": "Rumumaosi",
+        "city": "Port Harcourt",
+        "state": "Rivers",
+        "country": "Nigeria",
+        "latitude": null,
+        "longitude": null,
+        "created_at": "2024-07-12T19:04:35.000000Z",
+        "updated_at": "2024-07-12T19:04:35.000000Z"
+      },
+      "hire_date": "3 days ago",
+      "address": "59 Elekahia road Rumumaosi",
+      "area": "Rumumaosi",
+      "shift": {
+        "id": 1,
+        "shift_start": "08:00:01",
+        "shift_end": "10:00:01",
+        "shift_on": "",
+        "shift_type_id": 1,
+        "created_at": null,
+        "updated_at": null
+      },
+      "callRep": [],
+      "status": 1,
+      "graduated": 0
+    },
+    {
+      "id": 2,
+      "full_name": "Frank Edward",
+      "role": "CSS",
+      "phone_number": "080525455",
+      "gender": "binary",
+      "avatar": "avatars/o44uHj9uDCAGpGmoqd0hkHtd98NzJpK2tn4SiYi0.png",
+      "date_of_birth": "2024-04-11",
+      "beat": "",
+      "beat_address": null,
+      "hire_date": "1 week ago",
+      "address": "56 jeep road",
+      "area": "Elekahia",
+      "shift": null,
+      "callRep": [],
+      "status": 0,
+      "graduated": 0
+    }
+  ]
+}
