@@ -8,6 +8,16 @@
 
 @section('page-style')
     @vite(['resources/assets/vendor/scss/pages/page-user-view.scss'])
+    <style>
+        .btn.disabled {
+            pointer-events: none;
+            /* Prevents clicking */
+            opacity: 0.65;
+            /* Makes it look disabled */
+            cursor: not-allowed;
+            /* Changes cursor to indicate non-clickable */
+        }
+    </style>
 
 @endsection
 
@@ -134,7 +144,7 @@
                             <a href="javascript:;" class="btn btn-primary me-4" data-bs-target="#editStaff"
                                 data-bs-toggle="modal">Edit</a>
                             <a href="javascript:;"
-                                class="btn {{ $staff->graduated ? 'btn-label-info' : 'btn-label-danger' }} graduate-staff me-4"
+                                class="btn {{ $staff->graduated ? 'btn-label-info disabled' : 'btn-label-danger' }} graduate-staff me-4"
                                 data-user-id="{{ $staff->id }}">{{ $staff->graduated ? 'Graduated' : 'Graduate' }}</a>
                             @if (!isset($staff->graduated))
 
@@ -147,6 +157,12 @@
                                         Re- Assign
                                     @endif
                                 </a>
+                            @endif
+
+                            @if (isset($staff->graduated))
+                                <a href="javascript:;"
+                                    class="btn {{ $staff->graduated ? 'btn-label-primary' : 'btn-label-danger' }} ungraduate-staff me-4"
+                                    data-user-id="{{ $staff->id }}"> Ungraduated</a>
                             @endif
                             {{-- @if (!isset($staff->graduated))
 
@@ -527,8 +543,88 @@
             };
         }
     </script>
+     <script>
+      const unsuspendUser = document.querySelector('.ungraduate-staff');
 
-{{-- <script>
+      // Graduate Operative javascript
+      if (unsuspendUser) {
+        unsuspendUser.onclick = function() {
+              const userId = unsuspendUser.getAttribute('data-user-id');
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert user!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yes, Ungraduate Operative!',
+                  customClass: {
+                      confirmButton: 'btn btn-primary me-2 waves-effect waves-light',
+                      cancelButton: 'btn btn-label-secondary waves-effect waves-light'
+                  },
+                  buttonsStyling: false,
+
+              }).then(function(result) {
+                  if (result.isConfirmed) {
+                      const graduationDate = result.value;
+                      // AJAX call to graduate staff
+                      $.ajax({
+                          url: '{{ route('staff.ungraduate') }}', // Adjust the route to your actual route
+                          type: 'POST',
+                          data: {
+                              _token: '{{ csrf_token() }}',
+                              staff_id: userId,
+                              graduation_date: graduationDate
+                          },
+                          success: function(response) {
+                              if (response.success) {
+                                  Swal.fire({
+                                      icon: 'success',
+                                      title: 'Ungraduated!',
+                                      text: 'Operative has been ungraduated.',
+                                      customClass: {
+                                          confirmButton: 'btn btn-success waves-effect waves-light'
+                                      }
+                                  }).then(() => {
+                                      location.reload(); // Reload the page after success
+                                  });
+                              } else {
+                                  Swal.fire({
+                                      title: 'Error',
+                                      text: 'Failed to ungraduate staff.',
+                                      icon: 'error',
+                                      customClass: {
+                                          confirmButton: 'btn btn-success waves-effect waves-light'
+                                      }
+                                  });
+                              }
+                          },
+                          error: function() {
+                              Swal.fire({
+                                  title: 'Error',
+                                  text: 'Failed to ungraduate staff.',
+                                  icon: 'error',
+                                  customClass: {
+                                      confirmButton: 'btn btn-success waves-effect waves-light'
+                                  }
+                              });
+                          }
+                      });
+                  } else if (result.dismiss === Swal.DismissReason.cancel) {
+                      Swal.fire({
+                          title: 'Cancelled',
+                          text: 'Cancelled Ungraduation :)',
+                          icon: 'error',
+                          customClass: {
+                              confirmButton: 'btn btn-success waves-effect waves-light'
+                          }
+                      });
+                  }
+              });
+          };
+      }
+  </script>
+
+
+    {{-- <script>
   document.addEventListener('DOMContentLoaded', function () {
       let deleteButton = document.querySelector('#confirmDeleteButton');
       let rowId;
@@ -552,14 +648,14 @@
   });
 </script> --}}
 
-<script>
-  function confirmDelete(event) {
-      event.preventDefault();
-      if (confirm("Are you sure you want to delete this operative?")) {
-          document.getElementById('deleteForm').submit();
-      }
-  }
-  </script>
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to delete this operative?")) {
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
 
 
 @endsection

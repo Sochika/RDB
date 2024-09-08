@@ -10,7 +10,7 @@
       "url": "/"
     },
     {
-      "name": "Staffs",
+      "name": "Operatives",
       "icon": "menu-icon tf-icons ti ti-users",
       "slug": "staffs",
       "submenu": [
@@ -23,6 +23,11 @@
           "url": "/offOperative",
           "name": "Opertaives Off Duty",
           "slug": "staffs.offOperative"
+        },
+        {
+          "url": "/graduated",
+          "name": "Graduated Operatives",
+          "slug": "staffs.Graduated"
         }
       ]
     },

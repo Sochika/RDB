@@ -60,6 +60,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::post('/get-week-leads', [MarketController::class, 'getWeekLeads']);
 
   Route::get('/operatives', [StaffController::class, 'index'])->name('staffs-operatives');
+  Route::get('/graduated', [StaffController::class, 'staffGraduated'])->name('staffs.Graduated');
   Route::get('/staffs', [StaffController::class, 'index'])->name('staffs-admin');
   Route::get('/staff/table', [StaffController::class, 'tablex']);
   Route::get('/staff/onboarding', [StaffController::class, 'stafform'])->name('staff.onboarding');

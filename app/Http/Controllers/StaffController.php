@@ -539,4 +539,18 @@ class StaffController extends Controller
     //   return redirect('operatives')->with('error', 'An error occurred while deleting operative, contact SUCH.');
     // }
   }
+
+  public function staffGraduated()
+  {
+
+
+    // Main query to get staff graduated
+
+
+    $staffGraduated = Staff::whereNotNull('graduated')->get();
+    // dd($staffGraduated);
+
+
+    return view('radius.operatives.graduated', compact('staffGraduated'));
+  }
 }
