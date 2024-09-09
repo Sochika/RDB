@@ -24,7 +24,7 @@
         </div>
     @endif
     <div class="card container">
-        <h1>Operatives Graduated</h1>
+        <h1>Operatives Graduated ({{$staffGraduated->count()}})</h1>
         {{-- <div class="form-group d-flex align-items-center">
             <label for="date" class="mb-0 mr-2">Date:</label>
             <input type="datetime-local" name="date" id="date" class="form-control mr-2"

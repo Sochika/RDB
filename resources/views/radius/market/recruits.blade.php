@@ -119,7 +119,7 @@
                                                 <td>{{ $recruit->area }}</td>
                                                 <td>{{ $recruit->gender }}</td>
                                                 <td>{{ $recruit->note }}</td>
-                                                <td>{{ $recruit->approve }}</td>
+                                                <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected')}}</td>
                                                 @if (Auth::user()->level >= $level)
                                                     <td>{{ $recruit->user->name ?? '' }}</td>
                                                 @endif

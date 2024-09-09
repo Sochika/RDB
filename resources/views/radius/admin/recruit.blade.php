@@ -174,7 +174,7 @@
                             <th>Recruit</th>
                             {{-- <th>Phone Number</th> --}}
                             <th> Area Of Recruit <br>/ Area Sourced</th>
-                            <th>By</th>
+                            <th>Brought By</th>
 
                             <th> Note</th>
                             <th>Status</th>
@@ -185,27 +185,38 @@
                     </thead>
                     <tbody id="staffTableBody">
                         @foreach ($weekRecruits as $recruit)
-                            <tr>
-                                <td>{{ Carbon\Carbon::parse($recruit->recruit_date)->format('l') }} <br>
-                                    {{ Carbon\Carbon::parse($recruit->recruit_date)->format('jS F') }}</td>
-                                <td><a href="{{ route('staff-view', ['id' => $recruit->id]) }}">{{ $recruit->first_name }}
-                                        {{ $recruit->last_name }} <br>
-                                        {{ $recruit->gender }} <br>
-                                        {{ $recruit->phone_number }}</a></td>
-                                {{-- <td>{{ $recruit->phone_number }}</td> --}}
-                               @if ($recruit->area == $recruit->sourced_area)
-                                   <td>{{ $recruit->area }}</td>
-                               @else
-                               <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
-                               @endif
-                               <td>{{ $recruit->user->name ?? ''  }}</td>
-                                {{-- <td>{{ $recruit->gender }}</td> --}}
-                                <td>{{ $recruit->note }}</td>
-                                <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected')}}</td>
-                                {{-- @if (Auth::user()->level >= $level ) --}}
-
-                            {{-- @endif --}}
-                            </tr>
+                        <tr>
+                          <td>{{ Carbon\Carbon::parse($recruit->recruit_date)->format('l') }} <br>
+                              {{ Carbon\Carbon::parse($recruit->recruit_date)->format('jS F') }}</td>
+                          <td>
+                              <a href="{{ route('staff-view', ['id' => $recruit->id]) }}">{{ $recruit->first_name }} {{ $recruit->last_name }}<br>
+                                  {{ $recruit->gender }}<br>
+                                  {{ $recruit->phone_number }}
+                              </a>
+                          </td>
+                          @if ($recruit->area == $recruit->sourced_area)
+                              <td>{{ $recruit->area }}</td>
+                          @else
+                              <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
+                          @endif
+                          <td>{{ $recruit->user->name ?? '' }}</td>
+                          <td>{{ $recruit->note }}</td>
+                          <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected')}}</td>
+                          <td>
+                              <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
+                          </td>
+                      </tr>
+                      <tr id="sub-row-{{ $recruit->id }}" class="sub-row" style="display:none;">
+                          <td colspan="7">
+                              <!-- Form input or additional information can be placed here -->
+                              {{-- <form action="{{ route('add-info', ['id' => $recruit->id]) }}" method="POST"> --}}
+                                  @csrf
+                                  <label for="additional_info">Additional Information:</label>
+                                  <textarea name="additional_info" rows="1"></textarea>
+                                  <button type="submit">Save</button>
+                              {{-- </form> --}}
+                          </td>
+                      </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -330,6 +341,30 @@
       });
   </script>
 
+<script>
+  // Script to toggle sub-rows
+  document.querySelectorAll('.toggle-btn').forEach(button => {
+      button.addEventListener('click', function() {
+          const targetRow = document.getElementById(this.dataset.target);
+          if (targetRow.style.display === 'none' || targetRow.style.display === '') {
+              targetRow.style.display = 'table-row';
+              this.innerHTML = '&#8722;'; // Minus sign
+          } else {
+              targetRow.style.display = 'none';
+              this.innerHTML = '&#43;'; // Plus sign
+          }
+      });
+  });
+</script>
+
+<style>
+  .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+  }
+</style>
 
 
 

@@ -55,6 +55,23 @@
       ]
     },
     {
+      "name": "Trainer",
+      "icon": "menu-icon tf-icons ti ti-color-swatch",
+      "slug": "market",
+      "submenu": [
+        {
+          "url": "/admin/leads",
+          "name": "Recruits",
+          "slug": "admin.leads"
+        },
+        {
+          "url": "/admin/recruits",
+          "name": "Operatives",
+          "slug": "admin.recruits"
+        }
+      ]
+    },
+    {
       "name": "Sit Rep",
       "icon": "menu-icon tf-icons ti ti-checkbox",
       "slug": "sitReps",
