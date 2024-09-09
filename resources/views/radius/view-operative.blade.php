@@ -144,7 +144,7 @@
                             <a href="javascript:;" class="btn btn-primary me-4" data-bs-target="#editStaff"
                                 data-bs-toggle="modal">Edit</a>
                             <a href="javascript:;"
-                                class="btn {{ $staff->graduated ? 'btn-label-info disabled' : 'btn-label-danger' }} graduate-staff me-4"
+                                class="btn {{ $staff->graduated ? 'btn-label-warning disabled' : 'btn-label-danger' }} graduate-staff me-4"
                                 data-user-id="{{ $staff->id }}">{{ $staff->graduated ? 'Graduated' : 'Graduate' }}</a>
                             @if (!isset($staff->graduated))
 
@@ -162,7 +162,7 @@
                             @if (isset($staff->graduated))
                                 <a href="javascript:;"
                                     class="btn {{ $staff->graduated ? 'btn-label-primary' : 'btn-label-danger' }} ungraduate-staff me-4"
-                                    data-user-id="{{ $staff->id }}"> Ungraduated</a>
+                                    data-user-id="{{ $staff->id }}"> Ungraduate</a>
                             @endif
                             {{-- @if (!isset($staff->graduated))
 

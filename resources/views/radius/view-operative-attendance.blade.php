@@ -126,22 +126,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const exportBtn = document.getElementById('exportBtn');
-        const attendanceTable = document.getElementById('attendanceTable');
-        const staffName = document.getElementById('staffName').innerText;
+document.addEventListener('DOMContentLoaded', function() {
+    const exportBtn = document.getElementById('exportBtn');
+    const attendanceTable = document.getElementById('attendanceTable');
+    const staffName = document.getElementById('staffName').innerText;
 
-        exportBtn.addEventListener('click', function() {
-            const options = {
-                filename: `${staffName.replace(/\s/g, '_')}_Attendance_Report.pdf`,
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
+    exportBtn.addEventListener('click', function() {
+        const options = {
+            filename: `${staffName.replace(/\s/g, '_')}_Attendance_Report.pdf`,
+            html2canvas: {
+                scale: 1.0, // Adjust scale to fit the content within the page width
+                scrollX: 0,
+                scrollY: 0
+            },
+            jsPDF: {
+                unit: 'pt', // Points are commonly used for PDF generation
+                format: [1122, 793], // A4 dimensions in landscape mode (width: 1122pt, height: 793pt)
+                orientation: 'landscape'
+            },
+            pagebreak: {
+                mode: ['avoid-all', 'css', 'legacy']
+            }
+        };
 
-            html2pdf().from(attendanceTable).set(options).save();
-        });
+        html2pdf().from(attendanceTable).set(options).save();
     });
+});
+
 </script>
 
 <style>
