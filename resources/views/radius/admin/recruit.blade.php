@@ -7,7 +7,56 @@
     @livewireStyles
     {{-- @powerGridStyles --}}
     @livewireStyles
+    <style>
+        /* General styles for the rating container */
+        .rating {
+            display: inline-flex;
+            direction: rtl;
+            /* Reverse direction to handle star selection from left to right */
+            font-size: 25px;
+            /* Size of stars */
+        }
 
+        /* Hide radio buttons */
+        .rating input {
+            display: none;
+        }
+
+        /* Style for stars */
+        .rating label {
+            color: #ccc;
+            /* Default star color (gray) */
+            cursor: pointer;
+            transition: color 0.2s;
+            /* Smooth transition for color change */
+        }
+
+        /* Highlight stars when checked */
+        .rating input:checked+label,
+        .rating input:checked+label~label {
+            color: gold;
+            /* Color when star is selected (gold) */
+        }
+
+        /* Hover effect to preview star rating */
+        .rating label:hover,
+        .rating label:hover~label {
+            color: gold;
+            /* Color of stars when hovered over */
+        }
+
+        /* Ensure the radio buttons and labels are aligned correctly */
+        .rating input:checked~label {
+            color: gold;
+            /* Highlight all previous stars when a star is checked */
+        }
+
+        /* Optional: Adjust label spacing if needed */
+        .rating label {
+            margin: 0 2px;
+            /* Add margin between stars */
+        }
+    </style>
 @endsection
 
 @section('vendor-script')
@@ -54,12 +103,13 @@
                             </div>
 
                         </div>
-                        <a href="{{route('admin.allRecruits')}}">
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="ti ti-users ti-26px"></i>
-                            </span>
-                        </div></a>
+                        <a href="{{ route('admin.allRecruits') }}">
+                            <div class="avatar">
+                                <span class="avatar-initial rounded bg-label-primary">
+                                    <i class="ti ti-users ti-26px"></i>
+                                </span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -76,12 +126,13 @@
                             </div>
                             {{-- <small class="mb-0">Last week analytics</small> --}}
                         </div>
-                        <a href="{{route('admin.allRecruits')}}">
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-success">
-                                <i class="ti ti-user-check ti-26px"></i>
-                            </span>
-                        </div></a>
+                        <a href="{{ route('admin.allRecruits') }}">
+                            <div class="avatar">
+                                <span class="avatar-initial rounded bg-label-success">
+                                    <i class="ti ti-user-check ti-26px"></i>
+                                </span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -98,12 +149,13 @@
                             </div>
                             {{-- <small class="mb-0">Last week analytics </small> --}}
                         </div>
-                        <a href="{{route('admin.allRecruits')}}">
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-danger">
-                                <i class="ti ti-user-plus ti-26px"></i>
-                            </span>
-                        </div></a>
+                        <a href="{{ route('admin.allRecruits') }}">
+                            <div class="avatar">
+                                <span class="avatar-initial rounded bg-label-danger">
+                                    <i class="ti ti-user-plus ti-26px"></i>
+                                </span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -121,11 +173,13 @@
                             </div>
                             {{-- <small class="mb-0">Last week analytics</small> --}}
                         </div>
-                        <a href="{{route('admin.allRecruits')}}"><div class="avatar">
-                          <span class="avatar-initial rounded bg-label-success">
-                              <i class="ti ti-user-search ti-26px"></i>
-                          </span>
-                      </div></a>
+                        <a href="{{ route('admin.allRecruits') }}">
+                            <div class="avatar">
+                                <span class="avatar-initial rounded bg-label-success">
+                                    <i class="ti ti-user-search ti-26px"></i>
+                                </span>
+                            </div>
+                        </a>
 
                     </div>
                 </div>
@@ -178,45 +232,125 @@
 
                             <th> Note</th>
                             <th>Status</th>
-                            {{-- @if (Auth::user()->level >= $level ) --}}
+                            {{-- @if (Auth::user()->level >= $level) --}}
                             <th>Action</th>
                             {{-- @endif --}}
                         </tr>
                     </thead>
                     <tbody id="staffTableBody">
                         @foreach ($weekRecruits as $recruit)
-                        <tr>
-                          <td>{{ Carbon\Carbon::parse($recruit->recruit_date)->format('l') }} <br>
-                              {{ Carbon\Carbon::parse($recruit->recruit_date)->format('jS F') }}</td>
-                          <td>
-                              <a href="{{ route('staff-view', ['id' => $recruit->id]) }}">{{ $recruit->first_name }} {{ $recruit->last_name }}<br>
-                                  {{ $recruit->gender }}<br>
-                                  {{ $recruit->phone_number }}
-                              </a>
-                          </td>
-                          @if ($recruit->area == $recruit->sourced_area)
-                              <td>{{ $recruit->area }}</td>
-                          @else
-                              <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
-                          @endif
-                          <td>{{ $recruit->user->name ?? '' }}</td>
-                          <td>{{ $recruit->note }}</td>
-                          <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected')}}</td>
-                          <td>
-                              <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
-                          </td>
-                      </tr>
-                      <tr id="sub-row-{{ $recruit->id }}" class="sub-row" style="display:none;">
-                          <td colspan="7">
-                              <!-- Form input or additional information can be placed here -->
-                              {{-- <form action="{{ route('add-info', ['id' => $recruit->id]) }}" method="POST"> --}}
-                                  @csrf
-                                  <label for="additional_info">Additional Information:</label>
-                                  <textarea name="additional_info" rows="1"></textarea>
-                                  <button type="submit">Save</button>
-                              {{-- </form> --}}
-                          </td>
-                      </tr>
+                            <tr>
+                                <td>{{ Carbon\Carbon::parse($recruit->recruit_date)->format('l') }} <br>
+                                    {{ Carbon\Carbon::parse($recruit->recruit_date)->format('jS F') }}</td>
+                                <td>
+                                    <a href="">{{ $recruit->first_name }}
+                                        {{ $recruit->last_name }}<br>
+                                        {{ $recruit->gender }}<br>
+                                        {{ $recruit->phone_number }}
+                                    </a>
+                                </td>
+                                @if ($recruit->area == $recruit->sourced_area)
+                                    <td>{{ $recruit->area }}</td>
+                                @else
+                                    <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
+                                @endif
+                                <td>{{ $recruit->user->name ?? '' }}</td>
+                                <td>{{ $recruit->note }}</td>
+                                <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected') }}
+                                </td>
+                                <td>
+                                    <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
+                                </td>
+                            </tr>
+                            <tr id="sub-row-{{ $recruit->id }}" class="sub-row" style="display:none;">
+                                {{-- <td colspan="7"> --}}
+                                @csrf
+                                <td>
+                                    <label for="read_{{ $recruit->id }}">Can Read:</label>
+                                    <br>
+                                    <div class="rating">
+                                        <input type="radio" id="read_star3_{{ $recruit->id }}"
+                                            name="read_{{ $recruit->id }}" value="3" />
+                                        <label for="read_star3_{{ $recruit->id }}" title="3 stars">★</label>
+
+                                        <input type="radio" id="read_star2_{{ $recruit->id }}"
+                                            name="read_{{ $recruit->id }}" value="2" />
+                                        <label for="read_star2_{{ $recruit->id }}" title="2 stars">★</label>
+
+                                        <input type="radio" id="read_star1_{{ $recruit->id }}"
+                                            name="read_{{ $recruit->id }}" value="1" />
+                                        <label for="read_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <label for="write_{{ $recruit->id }}">Can Write:</label>
+                                    <br>
+                                    <div class="rating">
+                                        <input type="radio" id="write_star3_{{ $recruit->id }}"
+                                            name="write_{{ $recruit->id }}" value="3" />
+                                        <label for="write_star3_{{ $recruit->id }}" title="3 stars">★</label>
+
+                                        <input type="radio" id="write_star2_{{ $recruit->id }}"
+                                            name="write_{{ $recruit->id }}" value="2" />
+                                        <label for="write_star2_{{ $recruit->id }}" title="2 stars">★</label>
+
+                                        <input type="radio" id="write_star1_{{ $recruit->id }}"
+                                            name="write_{{ $recruit->id }}" value="1" />
+                                        <label for="write_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <label for="communication_{{ $recruit->id }}">Communication:</label>
+                                    <br>
+                                    <div class="rating">
+                                        <input type="radio" id="communication_star3_{{ $recruit->id }}"
+                                            name="communication_{{ $recruit->id }}" value="3" />
+                                        <label for="communication_star3_{{ $recruit->id }}" title="3 stars">★</label>
+
+                                        <input type="radio" id="communication_star2_{{ $recruit->id }}"
+                                            name="communication_{{ $recruit->id }}" value="2" />
+                                        <label for="communication_star2_{{ $recruit->id }}" title="2 stars">★</label>
+
+                                        <input type="radio" id="communication_star1_{{ $recruit->id }}"
+                                            name="communication_{{ $recruit->id }}" value="1" />
+                                        <label for="communication_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <label for="additional_info_{{ $recruit->id }}">Additional Information:</label>
+                                    <br>
+                                    <textarea class="form-control" name="additional_info_{{ $recruit->id }}" rows="1"></textarea>
+                                </td>
+                                <td>
+
+                                  <label class="switch switch-primary">
+                                    <span class="switch-label">Form Given:</span>
+
+                                    <input type="checkbox" class="switch-input" name="form_given"
+                                        value="1" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="ti ti-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="ti ti-x"></i>
+                                        </span>
+                                    </span>
+
+                                </label>
+
+
+
+                                </td>
+
+                                <td>
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-success" type="submit_all">Submit</button>
+                                </td>
+                                {{-- </td> --}}
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -279,92 +413,95 @@
 
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const { jsPDF } = window.jspdf;
+        document.addEventListener('DOMContentLoaded', function() {
+            const {
+                jsPDF
+            } = window.jspdf;
 
-          document.getElementById('recruitsWeek').addEventListener('change', function() {
-              const weekValue = this.value;
-              const [year, week] = weekValue.split('-W');
+            document.getElementById('recruitsWeek').addEventListener('change', function() {
+                const weekValue = this.value;
+                const [year, week] = weekValue.split('-W');
 
-              // Calculate the first and last day of the week
-              const firstDayOfWeek = new Date(year, 0, (week - 1) * 7 + 1);
-              let lastDayOfWeek = new Date(year, 0, (week - 1) * 7 + 7);
+                // Calculate the first and last day of the week
+                const firstDayOfWeek = new Date(year, 0, (week - 1) * 7 + 1);
+                let lastDayOfWeek = new Date(year, 0, (week - 1) * 7 + 7);
 
-              // Get today's date
-              const today = new Date();
+                // Get today's date
+                const today = new Date();
 
-              // Ensure lastDayOfWeek is not beyond today's date
-              if (lastDayOfWeek > today) {
-                  lastDayOfWeek = today;
-              }
+                // Ensure lastDayOfWeek is not beyond today's date
+                if (lastDayOfWeek > today) {
+                    lastDayOfWeek = today;
+                }
 
-              const formattedFirstDay = firstDayOfWeek.toLocaleDateString();
-              const formattedLastDay = lastDayOfWeek.toLocaleDateString();
+                const formattedFirstDay = firstDayOfWeek.toLocaleDateString();
+                const formattedLastDay = lastDayOfWeek.toLocaleDateString();
 
-              document.getElementById('reportWeek').textContent = `${formattedFirstDay} - ${formattedLastDay}`;
-          });
+                document.getElementById('reportWeek').textContent =
+                    `${formattedFirstDay} - ${formattedLastDay}`;
+            });
 
-          document.getElementById('exportBtn').addEventListener('click', function() {
-              const doc = new jsPDF();
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                const doc = new jsPDF();
 
-              // Load the logo
-              const logo = new Image();
-              logo.src = "{{ asset('assets/logo/login_logo.png') }}"; // Replace with your logo path
+                // Load the logo
+                const logo = new Image();
+                logo.src = "{{ asset('assets/logo/login_logo.png') }}"; // Replace with your logo path
 
-              // When the logo is loaded, add it to the PDF
-              logo.onload = function() {
-                  doc.addImage(logo, 'PNG', 10, 10, 25, 15); // Adjust the size and position as needed
+                // When the logo is loaded, add it to the PDF
+                logo.onload = function() {
+                    doc.addImage(logo, 'PNG', 10, 10, 25, 15); // Adjust the size and position as needed
 
-                  // Add title, date range, and presenter
-                  doc.text("Recruit This Week", 70, 20);
-                  doc.text(`Date: ${document.getElementById('reportWeek').textContent}`, 70, 30);
-                  doc.text(`Presenter: {{ Auth::user()->name }}`, 70, 40);
+                    // Add title, date range, and presenter
+                    doc.text("Recruit This Week", 70, 20);
+                    doc.text(`Date: ${document.getElementById('reportWeek').textContent}`, 70, 30);
+                    doc.text(`Presenter: {{ Auth::user()->name }}`, 70, 40);
 
-                  // Get the table content
-                  const table = document.getElementById('staffTable');
-                  const tableData = doc.autoTableHtmlToJson(table);
+                    // Get the table content
+                    const table = document.getElementById('staffTable');
+                    const tableData = doc.autoTableHtmlToJson(table);
 
-                  // Generate the PDF table
-                  doc.autoTable({
-                      head: [tableData.columns],
-                      body: tableData.data,
-                      startY: 50,
-                  });
+                    // Generate the PDF table
+                    doc.autoTable({
+                        head: [tableData.columns],
+                        body: tableData.data,
+                        startY: 50,
+                    });
 
-                  // Save the PDF
-                  doc.save('recruit-this-week.pdf');
-              };
+                    // Save the PDF
+                    doc.save('recruit-this-week.pdf');
+                };
 
-              // Trigger change event to set initial reportWeek text
-              document.getElementById('recruitsWeek').dispatchEvent(new Event('change'));
-          });
-      });
-  </script>
+                // Trigger change event to set initial reportWeek text
+                document.getElementById('recruitsWeek').dispatchEvent(new Event('change'));
+            });
+        });
+    </script>
 
-<script>
-  // Script to toggle sub-rows
-  document.querySelectorAll('.toggle-btn').forEach(button => {
-      button.addEventListener('click', function() {
-          const targetRow = document.getElementById(this.dataset.target);
-          if (targetRow.style.display === 'none' || targetRow.style.display === '') {
-              targetRow.style.display = 'table-row';
-              this.innerHTML = '&#8722;'; // Minus sign
-          } else {
-              targetRow.style.display = 'none';
-              this.innerHTML = '&#43;'; // Plus sign
-          }
-      });
-  });
-</script>
+    <script>
+        // Script to toggle sub-rows
+        document.querySelectorAll('.toggle-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetRow = document.getElementById(this.dataset.target);
+                if (targetRow.style.display === 'none' || targetRow.style.display === '') {
+                    targetRow.style.display = 'table-row';
+                    this.innerHTML = '&#8722;'; // Minus sign
+                } else {
+                    targetRow.style.display = 'none';
+                    this.innerHTML = '&#43;'; // Plus sign
+                }
+            });
+        });
+    </script>
 
-<style>
-  .toggle-btn {
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-  }
-</style>
+    <style>
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
 
 
 
