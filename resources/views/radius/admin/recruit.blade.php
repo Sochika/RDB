@@ -217,8 +217,8 @@
 
                 <div>
                     <button id="exportBtn" class="btn btn-primary mb-4">Export to PDF</button>
-                    <input type="week" name="week" id="recruitsWeek" class="form-control mb-4"
-                        value="{{ now()->format('Y-\WW') }}" max="{{ now()->format('Y-\WW') }}">
+                    {{-- <input type="week" name="week" id="recruitsWeek" class="form-control mb-4"
+                        value="{{ now()->format('Y-\WW') }}" max="{{ now()->format('Y-\WW') }}"> --}}
                 </div>
 
                 <table class="table container" id="staffTable">

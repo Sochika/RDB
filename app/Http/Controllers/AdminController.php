@@ -233,7 +233,7 @@ class AdminController extends Controller
     $endOfWeek = Carbon::parse($week)->endOfWeek();
 
     // Fetch recruits for the selected week
-    $weekRecruits = Recruit::whereBetween('recruit_date', [$startOfWeek, $endOfWeek])->get();
+    $weekRecruits = Recruit::all();
 
     return response()->json(['weekRecruits' => $weekRecruits]);
   }
@@ -251,4 +251,6 @@ class AdminController extends Controller
 
     return response()->json(['weekLeads' => $weekLeads]);
   }
+
+  public function saveNote(Request $request) {}
 }

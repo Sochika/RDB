@@ -24,7 +24,6 @@ return new class extends Migration
       $table->integer('amount')->nullable();
       $table->text('note')->nullable();
       $table->integer('approve')->default(0);
-      // $table->string('onboard')->nullable();
       $table->timestamps();
     });
   }
