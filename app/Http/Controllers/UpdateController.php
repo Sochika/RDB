@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+
 
 class UpdateController extends Controller
 {
+
+
+  // public function __construct()
+  // {
+  //   $this->middleware('check.user.id');
+  // }
+
   public function update()
   {
     // Run the migrations

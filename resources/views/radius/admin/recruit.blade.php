@@ -230,10 +230,12 @@
                             <th> Area Of Recruit <br>/ Area Sourced</th>
                             <th>Brought By</th>
 
-                            <th> Note</th>
+                            <th colspan="4"> Note</th>
                             <th>Status</th>
                             {{-- @if (Auth::user()->level >= $level) --}}
+                            <th>Added on</th>
                             <th>Action</th>
+
                             {{-- @endif --}}
                         </tr>
                     </thead>
@@ -255,8 +257,11 @@
                                     <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
                                 @endif
                                 <td>{{ $recruit->user->name ?? '' }}</td>
-                                <td>{{ $recruit->note }}</td>
+                                <td colspan="4">{{ $recruit->note }}</td>
                                 <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected') }}
+                                </td>
+                                <td>
+                                  {{ Carbon\Carbon::parse($recruit->created_at)->format('d/m/Y') }}
                                 </td>
                                 <td>
                                     <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
@@ -325,8 +330,9 @@
                                 </td>
                                 <td>
 
+                                  <span class="switch-label">Form Given:</span>
+                                  <br>
                                   <label class="switch switch-primary">
-                                    <span class="switch-label">Form Given:</span>
 
                                     <input type="checkbox" class="switch-input" name="form_given"
                                         value="1" />

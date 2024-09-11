@@ -15,6 +15,8 @@ use App\Http\Controllers\MarketController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UpdateController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/', function () {
 //   return view('welcome');
@@ -105,10 +107,35 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::delete('settings/shifts/delete/{id}', [SettingsController::class, 'destroyShiftype'])->name('shift_type.delete');
 
 
-  Route::get('/update', [UpdateController::class, 'update'])->name('update');
+  // Route::get('/update', [UpdateController::class, 'update'])->name('update');
   Route::get('/clear', [UpdateController::class, 'clear'])->name('clear');
   Route::get('/registera', [AuthController::class, 'showAddminForm'])->name('registera');
   Route::post('/addmin', [AuthController::class, 'store'])->name('addmin');
+
+  Route::get('/update', function () {
+    // Check if user is logged in and has ID 1
+    if (Auth::check() && Auth::id() == 1) {
+      return app(UpdateController::class)->update(); // Call the update method
+    }
+
+    return abort(403, 'Unauthorized action.'); // Deny access if not authorized
+  })->name('update');
+
+
+
+  Route::get('/rollback-migration', function () {
+    // Check if a user is logged in and if their ID is 1
+    if (Auth::check() && Auth::id() == 1) {
+      try {
+        Artisan::call('migrate:rollback');
+        return 'Migration rollback successful';
+      } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+      }
+    } else {
+      return 'Not Allowed to this';
+    }
+  });
 });
 
 Route::get('/db-version', function () {

@@ -14,12 +14,15 @@ return new class extends Migration
     Schema::create('user_notes', function (Blueprint $table) {
       $table->id();
       $table->foreignId('user_id')->references('id')->on('users');
+      $table->foreignId('operative_id')->nullable()->references('id')->on('staff');
       $table->foreignId('office_id')->references('id')->on('offices');
       $table->foreignId('lead_id')->nullable()->references('id')->on('beat_leads');
       $table->foreignId('recruit_id')->nullable()->references('id')->on('recruits');
       $table->integer('num_operatives')->nullable();
+      $table->text('record');
       $table->integer('amount')->nullable();
       $table->text('note');
+      $table->integer('approve')->default(0);
       $table->string('onboard');
       $table->timestamps();
     });
