@@ -15,15 +15,16 @@ return new class extends Migration
       $table->id();
       $table->foreignId('user_id')->references('id')->on('users');
       $table->foreignId('operative_id')->nullable()->references('id')->on('staff');
+      $table->foreignId('beat_id')->nullable()->references('id')->on('beats');
       $table->foreignId('office_id')->references('id')->on('offices');
       $table->foreignId('lead_id')->nullable()->references('id')->on('beat_leads');
       $table->foreignId('recruit_id')->nullable()->references('id')->on('recruits');
       $table->integer('num_operatives')->nullable();
-      $table->text('record');
+      $table->text('record')->nullable();
       $table->integer('amount')->nullable();
-      $table->text('note');
+      $table->text('note')->nullable();
       $table->integer('approve')->default(0);
-      $table->string('onboard');
+      // $table->string('onboard')->nullable();
       $table->timestamps();
     });
   }

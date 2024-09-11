@@ -18,12 +18,15 @@ class Notes extends Model
 
   protected $fillable = [
     'user_id',
+    'operative_id',
     'office_id',
     'lead_id',
     'recruit_id',
     'num_operatives',
+    'record',
     'amount',
     'note',
+    'approve',
     'onboard',
   ];
 }
