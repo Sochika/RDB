@@ -71,7 +71,7 @@
 
         {{-- @if ($configData['hasCustomizer'] == true) --}}
             <!-- Style Switcher -->
-            <li class="nav-item dropdown-style-switcher dropdown">
+            {{-- <li class="nav-item dropdown-style-switcher dropdown">
                 <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
                     href="javascript:void(0);" data-bs-toggle="dropdown">
                     <i class='ti ti-md'></i>
@@ -94,7 +94,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
         <!-- User -->
         <li class="nav-item navbar-dropdown dropdown-user dropdown">

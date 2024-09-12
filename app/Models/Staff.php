@@ -27,6 +27,7 @@ class Staff extends Model
     'avatar',
     'email',
     'phone_number',
+    'staff_no',
     'date_of_birth',
     'address',
     'area',

@@ -334,7 +334,7 @@ class StaffController extends Controller
     // Output or use $attendanceData as needed
     // dd($attendanceData);
     $staff = Staff::where('id', $id)->first();
-    return view('radius.view-operative-attendance', compact('staff', 'roles', 'shifts', 'beats', 'shiftypes', 'attendanceData'));
+    return view('radius.operatives.view-operative-attendance', compact('staff', 'roles', 'shifts', 'beats', 'shiftypes', 'attendanceData'));
   }
 
 
@@ -345,7 +345,18 @@ class StaffController extends Controller
     $shifts = Shift::where('staff_id', $id)->orderBy('created_at', 'desc')->get();
     $beats = Beat::all();
     $staff = Staff::where('id', $id)->first();
-    return view('radius.view-operative-activity', compact('staff', 'roles', 'shifts', 'beats', 'shiftypes'));
+    return view('radius.operatives.view-operative-activity', compact('staff', 'roles', 'shifts', 'beats', 'shiftypes'));
+  }
+
+  public function guarantors($id)
+  {
+    $roles = Role::all();
+    $shiftypes = ShiftType::all();
+    $shifts = Shift::where('staff_id', $id)->orderBy('created_at', 'desc')->get();
+    $beats = Beat::all();
+    $staff = Staff::where('id', $id)->first();
+    $guarantors = Staff::where('id', $id)->first();
+    return view('radius.operatives.view-operative-guarantors', compact('staff', 'roles', 'shifts', 'beats', 'shiftypes', 'guarantors'));
   }
   public function upload(Request $request)
   {

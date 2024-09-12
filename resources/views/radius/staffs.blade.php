@@ -130,7 +130,7 @@
     </div>
     <div class=" col-sm-3 col-xl-3">
         <a href="{{ route('staff.onboarding') }}"><button type="button" class="btn btn-primary">
-                <span class="ti-xs ti ti-user me-2"></span>Add Staff
+                <span class="ti-xs ti ti-user me-2"></span>Add Operative
             </button></a>
     </div>
     <p></p>
@@ -146,6 +146,7 @@
   {{-- @livewire('staff-operative') --}}
     <div class="card">
 
+      <br>
       <div class="card mb-4">
         <div class="card-datatable table-responsive">
           <livewire:staff-operative/>
@@ -162,7 +163,7 @@
         <!-- Offcanvas to add new user -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddStaffLabel">
             <div class="offcanvas-header border-bottom">
-                <h5 id="offcanvasAddStaffLabel" class="offcanvas-title">Add Staff</h5>
+                <h5 id="offcanvasAddStaffLabel" class="offcanvas-title">Add Operative</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 p-6 h-100">

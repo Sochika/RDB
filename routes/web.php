@@ -70,6 +70,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::post('/staff/update/{id}', [StaffController::class, 'update'])->name('staff.update');
   Route::get('/staff/view/{id}', [StaffController::class, 'view'])->name('staff-view');
   Route::get('/staff/activity/{id}', [StaffController::class, 'activity'])->name('staff-activity');
+  Route::get('/staff/guarantors/{id}', [StaffController::class, 'guarantors'])->name('staff-guarantors');
   Route::post('/staff/assign', [StaffController::class, 'staffAssign'])->name('staff.assign');
   Route::post('/staff/graduate', [StaffController::class, 'graduate'])->name('staff.graduate');
   Route::post('/staff/ungraduate', [StaffController::class, 'ungraduate'])->name('staff.ungraduate');

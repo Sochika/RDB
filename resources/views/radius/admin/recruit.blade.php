@@ -261,7 +261,7 @@
                                 <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected') }}
                                 </td>
                                 <td>
-                                  {{ Carbon\Carbon::parse($recruit->created_at)->format('d/m/Y') }}
+                                    {{ Carbon\Carbon::parse($recruit->created_at)->format('d/m/Y') }}
                                 </td>
                                 <td>
                                     <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
@@ -274,6 +274,14 @@
                                     <label for="read_{{ $recruit->id }}">Can Read:</label>
                                     <br>
                                     <div class="rating">
+                                        <input type="radio" id="read_star5_{{ $recruit->id }}"
+                                            name="read_{{ $recruit->id }}" value="5" />
+                                        <label for="read_star5_{{ $recruit->id }}" title="5 stars">★</label>
+
+                                        <input type="radio" id="read_star4_{{ $recruit->id }}"
+                                            name="read_{{ $recruit->id }}" value="4" />
+                                        <label for="read_star4_{{ $recruit->id }}" title="4 stars">★</label>
+
                                         <input type="radio" id="read_star3_{{ $recruit->id }}"
                                             name="read_{{ $recruit->id }}" value="3" />
                                         <label for="read_star3_{{ $recruit->id }}" title="3 stars">★</label>
@@ -292,6 +300,14 @@
                                     <br>
                                     <div class="rating">
                                         <input type="radio" id="write_star3_{{ $recruit->id }}"
+                                            name="write_{{ $recruit->id }}" value="5" />
+                                        <label for="write_star5_{{ $recruit->id }}" title="5 stars">★</label>
+
+                                        <input type="radio" id="write_star4_{{ $recruit->id }}"
+                                            name="write_{{ $recruit->id }}" value="4" />
+                                        <label for="write_star4_{{ $recruit->id }}" title="4 stars">★</label>
+
+                                        <input type="radio" id="write_star3_{{ $recruit->id }}"
                                             name="write_{{ $recruit->id }}" value="3" />
                                         <label for="write_star3_{{ $recruit->id }}" title="3 stars">★</label>
 
@@ -309,6 +325,14 @@
                                     <label for="communication_{{ $recruit->id }}">Communication:</label>
                                     <br>
                                     <div class="rating">
+                                        <input type="radio" id="communication_star5_{{ $recruit->id }}"
+                                            name="communication_{{ $recruit->id }}" value="5" />
+                                        <label for="communication_star5_{{ $recruit->id }}" title="5 stars">★</label>
+
+                                        <input type="radio" id="communication_star4_{{ $recruit->id }}"
+                                            name="communication_{{ $recruit->id }}" value="2" />
+                                        <label for="communication_star4_{{ $recruit->id }}" title="4 stars">★</label>
+
                                         <input type="radio" id="communication_star3_{{ $recruit->id }}"
                                             name="communication_{{ $recruit->id }}" value="3" />
                                         <label for="communication_star3_{{ $recruit->id }}" title="3 stars">★</label>
@@ -323,29 +347,55 @@
                                     </div>
                                 </td>
 
+
                                 <td>
+                                    <label for="exposure_{{ $recruit->id }}">Exposure:</label>
+                                    <br>
+                                    <div class="rating">
+                                        <input type="radio" id="exposure_star5_{{ $recruit->id }}"
+                                            name="exposure_{{ $recruit->id }}" value="5" />
+                                        <label for="exposure_star5_{{ $recruit->id }}" title="5 stars">★</label>
+
+                                        <input type="radio" id="exposure_star4_{{ $recruit->id }}"
+                                            name="exposure_{{ $recruit->id }}" value="2" />
+                                        <label for="exposure_star4_{{ $recruit->id }}" title="4 stars">★</label>
+
+                                        <input type="radio" id="exposure_star3_{{ $recruit->id }}"
+                                            name="exposure_{{ $recruit->id }}" value="3" />
+                                        <label for="exposure_star3_{{ $recruit->id }}" title="3 stars">★</label>
+
+                                        <input type="radio" id="exposure_star2_{{ $recruit->id }}"
+                                            name="exposure_{{ $recruit->id }}" value="2" />
+                                        <label for="exposure_star2_{{ $recruit->id }}" title="2 stars">★</label>
+
+                                        <input type="radio" id="exposure_star1_{{ $recruit->id }}"
+                                            name="exposure_{{ $recruit->id }}" value="1" />
+                                        <label for="exposure_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                    </div>
+                                </td>
+
+                                <td colspan="4">
                                     <label for="additional_info_{{ $recruit->id }}">Additional Information:</label>
                                     <br>
                                     <textarea class="form-control" name="additional_info_{{ $recruit->id }}" rows="1"></textarea>
                                 </td>
                                 <td>
 
-                                  <span class="switch-label">Form Given:</span>
-                                  <br>
-                                  <label class="switch switch-primary">
+                                    <span class="switch-label">Form Given:</span>
+                                    <br>
+                                    <label class="switch switch-primary">
 
-                                    <input type="checkbox" class="switch-input" name="form_given"
-                                        value="1" />
-                                    <span class="switch-toggle-slider">
-                                        <span class="switch-on">
-                                            <i class="ti ti-check"></i>
+                                        <input type="checkbox" class="switch-input" name="form_given" value="1" />
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on">
+                                                <i class="ti ti-check"></i>
+                                            </span>
+                                            <span class="switch-off">
+                                                <i class="ti ti-x"></i>
+                                            </span>
                                         </span>
-                                        <span class="switch-off">
-                                            <i class="ti ti-x"></i>
-                                        </span>
-                                    </span>
 
-                                </label>
+                                    </label>
 
 
 

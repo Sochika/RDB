@@ -1,4 +1,4 @@
-@extends('radius/view-operative')
+@extends('radius/operatives/view-operative')
 @section('page-style')
     <link rel="stylesheet" href="{{ asset('assets/themify-icons/themify-icons.css') }}">
 @endsection
@@ -9,6 +9,8 @@
                         class="ti ti-user-check ti-sm me-1_5"></i>Attendances</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('staff-activity', ['id' => $staff->id]) }}"><i
                         class="ti ti-lock ti-sm me-1_5"></i>Work History</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('staff-guarantors', ['id' => $staff->id]) }}"><i
+                        class="ti ti-lock ti-sm me-1_5"></i>Guarantors</a></li>
             {{-- <li class="nav-item"><a class="nav-link" href="{{url('app/user/view/notifications')}}"><i class="ti ti-bell ti-sm me-1_5"></i>Notifications</a></li> --}}
             {{-- <li class="nav-item"><a class="nav-link" href="{{url('app/user/view/connections')}}"><i class="ti ti-link ti-sm me-1_5"></i>Connections</a></li> --}}
         </ul>
@@ -160,7 +162,8 @@
                 jsPDF: {
                     unit: 'pt', // Points are commonly used for PDF generation
                     format: [1122,
-                    793], // A4 dimensions in landscape mode (width: 1122pt, height: 793pt)
+                        793
+                    ], // A4 dimensions in landscape mode (width: 1122pt, height: 793pt)
                     orientation: 'landscape'
                 },
                 pagebreak: {
