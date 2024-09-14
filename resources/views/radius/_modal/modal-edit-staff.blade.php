@@ -81,14 +81,18 @@
             </select>
           </div>
           <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserEmail">Hired Date</label>
-            <input type="date" id="modalEditUserEmail" name="hire_date" class="form-control" value="{{$staff->hire_date}}" required/>
+            <label class="form-label" for="modalEditUserHiredDate">Hired Date</label>
+            <input type="date" id="modalEditUserHiredDate" name="hire_date" class="form-control" value="{{$staff->hire_date}}" required/>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserStaffNo">Employment No</label>
+            <input type="text" id="modalEditUserStaffNo" name="staff_no" class="form-control" value="{{$staff->staff_no ?? ''}}" required/>
           </div>
           {{-- @if ($staff->graduated) --}}
 
           <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserEmail">Terminted Date</label>
-            <input type="date" id="modalEditUserEmail" name="graduated" class="form-control" readonly value="{{$staff->graduated}}" readonly/>
+            <label class="form-label" for="modalEditUserTerminted">Terminted Date</label>
+            <input type="date" id="modalEditUserTerminted" name="graduated" class="form-control" readonly value="{{$staff->graduated}}" readonly/>
           </div>
           {{-- @endif --}}
 

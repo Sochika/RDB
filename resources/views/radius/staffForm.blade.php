@@ -157,15 +157,22 @@
 
 
 
-                <!-- Guarantor Info Display (This will be updated when the modal is saved) -->
+                <!-- Success message -->
+                <p id="guarantorSuccessMsg" style="display: none;">Guarantor Saved Successfully!</p>
+
+                <!-- Guarantor Info Display Section -->
                 <div id="guarantorInfo" style="display: none;">
-                    <h6 class="mt-4">Guarantor One</h6>
-                    <p><strong>Name:</strong> <span id="guarantorNameDisplay"></span></p>
-                    <p><strong>Phone:</strong> <span id="guarantorPhoneDisplay"></span></p>
-                    <p><strong>Email:</strong> <span id="guarantorEmailDisplay"></span></p>
-                    <p><strong>Gender:</strong> <span id="guarantorGenderDisplay"></span></p>
-                    <p><strong>Address:</strong> <span id="guarantorAddressDisplay"></span></p>
+                    <p>Name: <span id="guarantorNameDisplay"></span></p>
+                    <p>Phone: <span id="guarantorPhoneDisplay"></span></p>
+                    <p>Gender: <span id="guarantorGenderDisplay"></span></p>
+                    <p>Email: <span id="guarantorEmailDisplay"></span></p>
+                    <p>Address: <span id="guarantorAddressDisplay"></span></p>
+                    <p>Avatar: <img id="guarantorAvatarDisplay" style="display: none;" alt="Guarantor Avatar"
+                            width="100" height="100"></p>
+                    <p>Credential: <span id="guarantorCredentialDisplay"></span></p>
                 </div>
+
+
 
                 <div class="pt-6">
                     <button type="submit" class="btn btn-primary me-4">Submit</button>
@@ -182,100 +189,451 @@
 
     <!-- /Modal -->
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const profileImageInput = document.getElementById('profile_image');
-            const imagePreview = document.getElementById('imagePreview');
-            const deleteImageButton = document.getElementById('deleteImageButton');
+            const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+            const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+            const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+            const guarantorInfo = document.getElementById('guarantorInfo');
 
-            // Function to preview the uploaded image
-            profileImageInput.addEventListener('change', function() {
-                const file = this.files[0];
+            // Function to handle the file input
+            function getBase64(file, callback) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    callback(reader.result);
+                };
+                reader.onerror = function(error) {
+                    console.log('Error: ', error);
+                };
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.style.display = 'block';
-                        deleteImageButton.style.display = 'block';
-                    }
                     reader.readAsDataURL(file);
+                } else {
+                    callback(null);
                 }
-            });
+            }
 
-            // Function to delete the selected image
-            deleteImageButton.addEventListener('click', function() {
-                profileImageInput.value = ''; // Clear the input
-                imagePreview.src = '#';
-                imagePreview.style.display = 'none';
-                deleteImageButton.style.display = 'none';
+            // Function to populate guarantor information from localStorage
+            function populateGuarantorFromLocalStorage() {
+                const storedGuarantor = localStorage.getItem('guarantorData');
+                if (storedGuarantor) {
+                    const guarantorData = JSON.parse(storedGuarantor);
+
+                    // Populate the display section with stored data
+                    document.getElementById('guarantorNameDisplay').innerText =
+                        `${guarantorData.firstName} ${guarantorData.middleName} ${guarantorData.lastName}`;
+                    document.getElementById('guarantorPhoneDisplay').innerText = guarantorData.phoneNumber;
+                    document.getElementById('guarantorGenderDisplay').innerText = guarantorData.gender;
+                    document.getElementById('guarantorEmailDisplay').innerText = guarantorData.email;
+                    document.getElementById('guarantorAddressDisplay').innerText = guarantorData.address;
+
+                    // Display avatar if available
+                    if (guarantorData.avatar) {
+                        document.getElementById('guarantorAvatarDisplay').src = guarantorData.avatar;
+                        document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+                    } else {
+                        document.getElementById('guarantorAvatarDisplay').style.display = 'none';
+                    }
+
+                    // Display credential link or text if available
+                    if (guarantorData.credential) {
+                        document.getElementById('guarantorCredentialDisplay').innerHTML =
+                            `<a href="${guarantorData.credential}" download>Download Credential</a>`;
+                    } else {
+                        document.getElementById('guarantorCredentialDisplay').innerHTML = '';
+                    }
+
+                    // Show the Guarantor Info section
+                    guarantorInfo.style.display = 'block';
+                    addGuarantorBtn.textContent = 'Guarantor Saved';
+                    guarantorSuccessMsg.style.display = 'block';
+                }
+            }
+
+            // Call this function when the page loads
+            populateGuarantorFromLocalStorage();
+
+            // Handle saving guarantor data from the modal to the hidden fields and localStorage
+            saveGuarantorBtn.addEventListener('click', function() {
+                const guarantorFName = document.getElementById('guarantor_first_name').value;
+                const guarantorMName = document.getElementById('guarantor_middle_name').value;
+                const guarantorLName = document.getElementById('guarantor_last_name').value;
+                const guarantorPhone = document.getElementById('guarantor_phone_number').value;
+                const guarantorGender = document.getElementById('guarantor_gender').value;
+                const guarantorEmail = document.getElementById('guarantor_email').value;
+                const guarantorAddress = document.getElementById('addressGuarantor').value;
+                const guarantorAvatarFile = document.getElementById('avatarGuarantor').files[
+                0]; // Avatar file
+                const credentialGuarantorFile = document.getElementById('credentialGuarantor').files[
+                0]; // Credential file
+
+                // Get avatar base64 and credential as a downloadable link
+                getBase64(guarantorAvatarFile, function(avatarBase64) {
+                    const guarantorData = {
+                        firstName: guarantorFName,
+                        middleName: guarantorMName,
+                        lastName: guarantorLName,
+                        phoneNumber: guarantorPhone,
+                        gender: guarantorGender,
+                        email: guarantorEmail,
+                        address: guarantorAddress,
+                        avatar: avatarBase64,
+                        credential: credentialGuarantorFile ? URL.createObjectURL(
+                            credentialGuarantorFile) : ''
+                    };
+
+                    localStorage.setItem('guarantorData', JSON.stringify(guarantorData));
+
+                    // Update display section with guarantor information
+                    document.getElementById('guarantorNameDisplay').innerText =
+                        `${guarantorFName} ${guarantorMName} ${guarantorLName}`;
+                    document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+                    document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+                    document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+                    document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+
+                    // Display avatar
+                    if (avatarBase64) {
+                        document.getElementById('guarantorAvatarDisplay').src = avatarBase64;
+                        document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+                    } else {
+                        document.getElementById('guarantorAvatarDisplay').style.display = 'none';
+                    }
+
+                    // Display credential
+                    if (credentialGuarantorFile) {
+                        document.getElementById('guarantorCredentialDisplay').innerHTML =
+                            `<a href="${URL.createObjectURL(credentialGuarantorFile)}" download>Download Credential</a>`;
+                    } else {
+                        document.getElementById('guarantorCredentialDisplay').innerHTML = '';
+                    }
+
+                    // Show the Guarantor Info section
+                    guarantorInfo.style.display = 'block';
+
+                    // Show success message
+                    guarantorSuccessMsg.style.display = 'block';
+                });
             });
         });
     </script>
 
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
-      const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
-      const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+    {{--
+    <script>
+        //     document.addEventListener('DOMContentLoaded', function() {
+        //         const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+        //         const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+        //         const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+        //         const guarantorInfo = document.getElementById('guarantorInfo');
 
-      // Handle saving guarantor data from the modal to the hidden fields in the main form
-      saveGuarantorBtn.addEventListener('click', function() {
-          const guarantorFName = document.getElementById('guarantor_first_name').value;
-          const guarantorMName = document.getElementById('guarantor_middle_name').value;
-          const guarantorLName = document.getElementById('guarantor_last_name').value;
-          const guarantorPhone = document.getElementById('guarantor_phone_number').value;
-          const guarantorGender = document.getElementById('guarantor_gender').value;
-          const guarantorEmail = document.getElementById('guarantor_email').value;
-          const guarantorAddress = document.getElementById('addressGuarantor').value;
+        //         // Function to populate guarantor information from localStorage
+        //         function populateGuarantorFromLocalStorage() {
+        //             const storedGuarantor = localStorage.getItem('guarantorData');
+        //             if (storedGuarantor) {
+        //                 const guarantorData = JSON.parse(storedGuarantor);
 
-          // Set hidden input values in the main form
-          document.getElementById('guarantor_fname').value = guarantorFName;
-          document.getElementById('guarantor_mname').value = guarantorMName;
-          document.getElementById('guarantor_lname').value = guarantorLName;
-          document.getElementById('guarantor_phone').value = guarantorPhone;
-          document.getElementById('guarantor_address').value = guarantorAddress;
+        //                 // Populate the display section with stored data
+        //                 document.getElementById('guarantorNameDisplay').innerText = guarantorData.firstName + ' ' +
+        //                     guarantorData.middleName + ' ' + guarantorData.lastName;
+        //                 document.getElementById('guarantorPhoneDisplay').innerText = guarantorData.phoneNumber;
+        //                 document.getElementById('guarantorGenderDisplay').innerText = guarantorData.gender;
+        //                 document.getElementById('guarantorEmailDisplay').innerText = guarantorData.email;
+        //                 document.getElementById('guarantorAddressDisplay').innerText = guarantorData.address;
 
+        //                 // Display avatar if available
+        //                 if (guarantorData.avatar) {
+        //                     document.getElementById('guarantorAvatarDisplay').src = guarantorData.avatar;
+        //                     document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+        //                 }
 
+        //                 // Display credential link or text if available
+        //                 if (guarantorData.credential) {
+        //                     document.getElementById('guarantorCredentialDisplay').innerHTML =
+        //                         `<a href="${guarantorData.credential}" download>Download Credential</a>`;
+        //                 }
 
-          // Update display section with guarantor information
-          document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' + guarantorMName + ' ' + guarantorLName;
-          document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
-          document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
-          document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
-          document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+        //                 // Show the Guarantor Info section
+        //                 guarantorInfo.style.display = 'block';
+        //                 addGuarantorBtn.textContent = 'Guarantor Saved';
+        //             }
+        //         }
 
-          // Show the Guarantor Info section
-          document.getElementById('guarantorInfo').style.display = 'block';
+        //         // Call this function when the page loads
+        //         populateGuarantorFromLocalStorage();
 
-          // // Show success message
-          // guarantorSuccessMsg.style.display = 'block';
+        //         // Handle saving guarantor data from the modal to the hidden fields and localStorage
+        //         saveGuarantorBtn.addEventListener('click', function() {
+        //             const guarantorFName = document.getElementById('guarantor_first_name').value;
+        //             const guarantorMName = document.getElementById('guarantor_middle_name').value;
+        //             const guarantorLName = document.getElementById('guarantor_last_name').value;
+        //             const guarantorPhone = document.getElementById('guarantor_phone_number').value;
+        //             const guarantorGender = document.getElementById('guarantor_gender').value;
+        //             const guarantorEmail = document.getElementById('guarantor_email').value;
+        //             const guarantorAddress = document.getElementById('addressGuarantor').value;
+        //             const guarantorAvatar = document.getElementById('avatarGuarantor')
+        //                 .value; // Avatar file URL or base64
+        //             const credentialGuarantor = document.getElementById('credentialGuarantor')
+        //                 .value; // Credential file URL or text
 
-          // // Change the main button text to indicate a guarantor was saved
-          // addGuarantorBtn.textContent = 'Guarantor Saved';
+        //             // Store the data in localStorage
+        //             const guarantorData = {
+        //                 firstName: guarantorFName,
+        //                 middleName: guarantorMName,
+        //                 lastName: guarantorLName,
+        //                 phoneNumber: guarantorPhone,
+        //                 gender: guarantorGender,
+        //                 email: guarantorEmail,
+        //                 address: guarantorAddress,
+        //                 avatar: guarantorAvatar,
+        //                 credential: credentialGuarantor
+        //             };
+        //             localStorage.setItem('guarantorData', JSON.stringify(guarantorData));
 
-          // // Disable the save button after saving
-          // saveGuarantorBtn.disabled = true;
+        //             // Reset the refresh count after saving data
+        //             localStorage.setItem('refreshCount', '0');
 
-          // // Close the modal after saving (with a delay for user feedback)
-          // setTimeout(function() {
-          //     const modalGuarantor = new bootstrap.Modal(document.getElementById(
-          //         'modalGuarantor'));
-          //     modalGuarantor.hide();
-          //     guarantorSuccessMsg.style.display =
-          //     'none'; // Hide the success message after modal closes
-          // }, 1000); // Delay of 1 second
+        //             // Update display section with guarantor information
+        //             document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' +
+        //                 guarantorMName + ' ' + guarantorLName;
+        //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+        //             document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+        //             document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+        //             document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
 
-          // Show the Guarantor Info section
-          document.getElementById('guarantorInfo').style.display = 'block';
+        //             // Display avatar
+        //             if (guarantorAvatar) {
+        //                 document.getElementById('guarantorAvatarDisplay').src = guarantorAvatar;
+        //                 document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+        //             }
 
-          // Close the modal after saving
-          const modalGuarantor = new bootstrap.Modal(document.getElementById('modalGuarantor'));
-          modalGuarantor.hide();
-      });
-  });
-</script>
+        //             // Display credential
+        //             if (credentialGuarantor) {
+        //                 document.getElementById('guarantorCredentialDisplay').innerHTML =
+        //                     `<a href="${credentialGuarantor}" download>Download Credential</a>`;
+        //             }
 
+        //             // Show the Guarantor Info section
+        //             guarantorInfo.style.display = 'block';
 
+        //             // Show success message
+        //             guarantorSuccessMsg.style.display = 'block';
+
+        //             // Change the main button text to indicate a guarantor was saved
+        //             addGuarantorBtn.textContent = 'Guarantor Saved';
+
+        //             // Disable the save button after saving
+        //             saveGuarantorBtn.disabled = true;
+
+        //             // Optionally close the modal after saving (with a delay for user feedback)
+        //             setTimeout(function() {
+        //                 guarantorSuccessMsg.style.display = 'none';
+        //             }, 5000); // Delay of 5 seconds
+        //         });
+
+        //         // Function to handle clearing data after two page refreshes
+        //         function handleRefreshCount() {
+        //             let refreshCount = localStorage.getItem('refreshCount');
+
+        //             if (refreshCount) {
+        //                 refreshCount = parseInt(refreshCount) + 1;
+        //             } else {
+        //                 refreshCount = 1;
+        //             }
+
+        //             // Update the refresh count in localStorage
+        //             localStorage.setItem('refreshCount', refreshCount);
+
+        //             // If the page has been refreshed twice, clear the guarantor data
+        //             if (refreshCount >= 2) {
+        //                 localStorage.removeItem('guarantorData');
+        //                 localStorage.removeItem('refreshCount');
+        //                 console.log('Guarantor data and refresh count cleared after two refreshes.');
+        //             }
+        //         }
+
+        //         // Call the function to check and handle refresh count
+        //         handleRefreshCount();
+        //     });
+        //
+    </script> --}}
+    {{-- <script>
+    //     document.addEventListener('DOMContentLoaded', function() {
+    //         const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+    //         const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+    //         const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+
+    //         // Handle saving guarantor data from the modal to the hidden fields in the main form
+    //         saveGuarantorBtn.addEventListener('click', function() {
+    //             const guarantorFName = document.getElementById('guarantor_first_name').value;
+    //             const guarantorMName = document.getElementById('guarantor_middle_name').value;
+    //             const guarantorLName = document.getElementById('guarantor_last_name').value;
+    //             const guarantorPhone = document.getElementById('guarantor_phone_number').value;
+    //             const guarantorGender = document.getElementById('guarantor_gender').value;
+    //             const guarantorEmail = document.getElementById('guarantor_email').value;
+    //             const guarantorAddress = document.getElementById('addressGuarantor').value;
+
+    //             // Set hidden input values in the main form
+    //             document.getElementById('guarantor_fname').value = guarantorFName;
+    //             document.getElementById('guarantor_mname').value = guarantorMName;
+    //             document.getElementById('guarantor_lname').value = guarantorLName;
+    //             document.getElementById('guarantor_phone').value = guarantorPhone;
+    //             document.getElementById('guarantor_address').value = guarantorAddress;
+
+    //             // Update display section with guarantor information
+    //             document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' +
+    //                 guarantorMName + ' ' + guarantorLName;
+    //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+    //             document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+    //             document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+    //             document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+
+    //             // Show the Guarantor Info section
+    //             document.getElementById('guarantorInfo').style.display = 'block';
+
+    //             // Optional: Show success message
+    //             guarantorSuccessMsg.style.display = 'block';
+
+    //             // Optional: Change the main button text to indicate a guarantor was saved
+    //             addGuarantorBtn.textContent = 'Guarantor Saved';
+
+    //             // Optional: Disable the save button after saving
+    //             saveGuarantorBtn.disabled = true;
+
+    //             // Optional: Close the modal after saving (with a delay for user feedback)
+    //             setTimeout(function() {
+    //                 const modalGuarantor = new bootstrap.Modal(document.getElementById(
+    //                     'modalGuarantor'));
+    //                 modalGuarantor.hide();
+    //                 guarantorSuccessMsg.style.display =
+    //                 'none'; // Hide the success message after modal closes
+    //             }, 1000); // Delay of 1 second
+    //         });
+    //     });
+    // </script>
+
+    // {{-- <script>
+    //     document.addEventListener('DOMContentLoaded', function() {
+    //         const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+    //         const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+    //         const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+
+    //         saveGuarantorBtn.addEventListener('click', function() {
+    //             const guarantorFName = document.getElementById('guarantor_first_name');
+    //             const guarantorMName = document.getElementById('guarantor_middle_name');
+    //             const guarantorLName = document.getElementById('guarantor_last_name');
+    //             const guarantorPhone = document.getElementById('guarantor_phone_number');
+    //             const guarantorGender = document.getElementById('guarantor_gender');
+    //             const guarantorEmail = document.getElementById('guarantor_email');
+    //             const guarantorAddress = document.getElementById('addressGuarantor');
+
+    //             // Set hidden input values in the main form
+    //             document.getElementById('guarantor_fname').value = guarantorFName;
+    //             document.getElementById('guarantor_mname').value = guarantorMName;
+    //             document.getElementById('guarantor_lname').value = guarantorLName;
+    //             document.getElementById('guarantor_phone').value = guarantorPhone;
+    //             document.getElementById('guarantor_address').value = guarantorAddress;
+
+    //             // Update display section with guarantor information
+    //             document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' +
+    //                 guarantorMName + ' ' + guarantorLName;
+    //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+    //             document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+    //             document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+    //             document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+
+    //             // Show the Guarantor Info section
+    //             document.getElementById('guarantorInfo').style.display = 'block';
+
+    //             // Optional: Show success message
+    //             guarantorSuccessMsg.style.display = 'block';
+
+    //             // Optional: Change the main button text to indicate a guarantor was saved
+    //             addGuarantorBtn.textContent = 'Guarantor Saved';
+
+    //             // Optional: Disable the save button after saving
+    //             saveGuarantorBtn.disabled = true;
+
+    //             // Optional: Close the modal after saving (with a delay for user feedback)
+    //             setTimeout(function() {
+    //                 const modalGuarantor = new bootstrap.Modal(document.getElementById(
+    //                     'modalGuarantor'));
+    //                 modalGuarantor.hide();
+    //                 guarantorSuccessMsg.style.display =
+    //                 'none'; // Hide the success message after modal closes
+    //             }, 1000); // Delay of 1 second
+    //         });
+    //     });
+    //     document.addEventListener('DOMContentLoaded', function() {
+    //         const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+    //         const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+    //         const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+    //         const guarantorInfo = document.getElementById('guarantorInfo');
+
+    //         // Handle saving guarantor data from the modal to the hidden fields in the main form
+    //         saveGuarantorBtn.addEventListener('click', function() {
+    //             const guarantorFName = document.getElementById('guarantor_first_name').value;
+    //             const guarantorMName = document.getElementById('guarantor_middle_name').value;
+    //             const guarantorLName = document.getElementById('guarantor_last_name').value;
+    //             const guarantorPhone = document.getElementById('guarantor_phone_number').value;
+    //             const guarantorGender = document.getElementById('guarantor_gender').value;
+    //             const guarantorEmail = document.getElementById('guarantor_email').value;
+    //             const guarantorAddress = document.getElementById('addressGuarantor').value;
+
+    //             // Set hidden input values in the main form
+    //             document.getElementById('guarantor_fname').value = guarantorFName;
+    //             document.getElementById('guarantor_mname').value = guarantorMName;
+    //             document.getElementById('guarantor_lname').value = guarantorLName;
+    //             document.getElementById('guarantor_phone').value = guarantorPhone;
+    //             document.getElementById('guarantor_address').value = guarantorAddress;
+
+    //             // Update display section with guarantor information
+    //             document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' +
+    //                 guarantorMName + ' ' + guarantorLName;
+    //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+    //             document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+    //             document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+    //             document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+
+    //             // Show the Guarantor Info section
+    //             guarantorInfo.style.display = 'block';
+
+    //             // Optional: Show success message
+    //             guarantorSuccessMsg.style.display = 'block';
+
+    //             // Optional: Change the main button text to indicate a guarantor was saved
+    //             addGuarantorBtn.textContent = 'Guarantor Saved';
+
+    //             // Optional: Disable the save button after saving
+    //             saveGuarantorBtn.disabled = true;
+
+    //             // Optional: Close the modal after saving (with a delay for user feedback)
+    //             setTimeout(function() {
+    //                 const modalGuarantor = new bootstrap.Modal(document.getElementById(
+    //                     'modalGuarantor'));
+    //                 modalGuarantor.hide();
+    //                 guarantorSuccessMsg.style.display =
+    //                 'none'; // Hide the success message after modal closes
+    //             }, 1000); // Delay of 1 second
+    //         });
+
+    //         // Optional: Hide the guarantor info section when resetting the form
+    //         document.getElementById('addStaffForm').addEventListener('reset', function() {
+    //             guarantorInfo.style.display = 'none';
+    //             document.getElementById('guarantor_fname').value = '';
+    //             document.getElementById('guarantor_mname').value = '';
+    //             document.getElementById('guarantor_lname').value = '';
+    //             document.getElementById('guarantor_phone').value = '';
+    //             document.getElementById('guarantor_address').value = '';
+    //             document.getElementById('guarantorNameDisplay').innerText = '';
+    //             document.getElementById('guarantorPhoneDisplay').innerText = '';
+    //             document.getElementById('guarantorGenderDisplay').innerText = '';
+    //             document.getElementById('guarantorEmailDisplay').innerText = '';
+    //             document.getElementById('guarantorAddressDisplay').innerText = '';
+    //             addGuarantorBtn.textContent = 'Add Guarantor';
+    //             saveGuarantorBtn.disabled = false;
+    //         });
+    //     });
+    // </script> --}}
 
 @endsection

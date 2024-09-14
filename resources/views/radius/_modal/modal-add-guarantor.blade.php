@@ -5,7 +5,7 @@
           <div class="modal-body">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               <div class="text-center mb-6">
-                  <h4 class="mb-2">Edit Guarantor Information</h4>
+                  <h4 class="mb-2">Add Guarantor Information</h4>
               </div>
               <form id="guarantorForm"class="row g-6" >
                   {{-- @csrf --}}
