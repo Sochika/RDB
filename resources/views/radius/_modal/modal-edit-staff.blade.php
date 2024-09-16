@@ -45,7 +45,7 @@
           </div>
           <div class="col-12 col-md-6">
             <label class="form-label" for="modalEmail">Email</label>
-            <input type="text" id="modalEmail" name="email" class="form-control" value="{{$staff->email}}" />
+            <input type="email" id="modalEmail" name="email" class="form-control" value="{{$staff->email}}" />
           </div>
           <div class="col-12">
             <label class="form-label" for="modalEditAddress">Address</label>

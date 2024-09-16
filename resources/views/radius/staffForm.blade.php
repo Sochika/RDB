@@ -50,8 +50,8 @@
                         aria-label="John Doe" required />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="add-user-middleNmae">Middle Name</label>
-                    <input type="text" class="form-control" id="add-user-middleNmae" placeholder="Mike"
+                    <label class="form-label" for="add-user-middleName">Middle Name</label>
+                    <input type="text" class="form-control" id="add-user-middleName" placeholder="Mike"
                         name="middle_name" aria-label="John Doe" />
                 </div>
                 <div class="col-md-4">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="add-user-email">Email</label>
-                    <input type="text" id="add-user-email" class="form-control" placeholder="john.doe@example.com"
+                    <input type="email" id="add-user-email" class="form-control" placeholder="john.doe@example.com"
                         aria-label="john.doe@example.com" name="email" />
                 </div>
                 <div class="col-md-4">
@@ -72,7 +72,7 @@
                 <div class="col-md-4">
                     <label class="form-label" for="add-gender">Gender</label>
                     <select id="add-gender" name="gender" class="form-select" required>
-                        <option value="binary">Select</option>
+                        <option value="">Select</option>
                         <option value="female">Female</option>
                         <option value="male">Male</option>
                     </select>
@@ -140,182 +140,379 @@
                     <button type="button" id="deleteImageButton" style="display: none;">Delete Image</button>
                 </div>
 
+                <!-- Button to add first guarantor -->
                 <div class="pt-6">
-                    <a href="javascript:;" class="btn btn-info me-4" id="addGuarantorBtn"
-                        data-bs-target="#modalGuarantor" data-bs-toggle="modal">Guarantor</a>
+                    <a href="javascript:;" class="btn btn-info me-4" id="addGuarantorBtn">Add Guarantor 1</a>
                 </div>
 
-                <!-- Hidden Guarantor Fields -->
-                <input type="hidden" name="guarantor_fname" id="guarantor_fname">
-                <input type="hidden" name="guarantor_mname" id="guarantor_mname">
-                <input type="hidden" name="guarantor_lname" id="guarantor_lname">
-                <input type="hidden" name="guarantor_phone" id="guarantor_phone">
-                <input type="hidden" name="guarantor_email" id="guarantor_email">
-                <input type="hidden" name="guarantor_address" id="guarantor_address">
-                <input type="hidden" name="guarantor_avatar" id="guarantor_avatar">
-                <input type="hidden" name="guarantor_ID" id="guarantor_ID">
+                <!-- First Guarantor Form Section (Initially hidden) -->
+                <div id="guarantorForm1" style="display: none; margin-top: 20px;">
+                    <h5>Guarantor 1 Information</h5>
+                    <div class="row g-6">
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-firstName">First Name</label>
+                            <input type="text" class="form-control" id="guarantor1-firstName" name="guarantor1_fname"
+                                placeholder="First Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-middleName">Middle Name</label>
+                            <input type="text" class="form-control" id="guarantor1-middleName"
+                                name="guarantor1_mname" placeholder="Middle Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-lastName">Last Name</label>
+                            <input type="text" class="form-control" id="guarantor1-lastName" name="guarantor1_lname"
+                                placeholder="Last Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-phone">Phone</label>
+                            <input type="text" class="form-control" id="guarantor1-phone" name="guarantor1_phone"
+                                placeholder="0809 988 0000" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-email">Email</label>
+                            <input type="email" class="form-control" id="guarantor1-email" name="guarantor1_email"
+                                placeholder="email@example.com" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-address">Address</label>
+                            <textarea class="form-control" id="guarantor1-address" name="guarantor1_address" placeholder="Guarantor Address"></textarea>
+                        </div>
+                        <!-- Guarantor 1 Avatar -->
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-avatar">Guarantor 1 Avatar</label>
+                            <input type="file" class="form-control" id="guarantor1-avatar" name="guarantor1_avatar"
+                                accept="image/*" />
+                            <br>
+                            <img id="guarantor1-avatar-preview" src="#" alt="Guarantor 1 Avatar Preview"
+                                style="display: none;" height="150">
+                        </div>
+                        <!-- Guarantor 1 ID -->
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-ID">Guarantor 1 ID (Image or PDF)</label>
+                            <input type="file" class="form-control" id="guarantor1-ID" name="guarantor1_ID"
+                                accept="image/*,application/pdf" />
+                            <br>
+                            <div id="guarantor1-ID-preview" style="display: none;">
+                                <img id="guarantor1-ID-img-preview" src="#" alt="Guarantor 1 ID Image Preview"
+                                    style="display: none;" height="150">
+                                <p id="guarantor1-ID-pdf-preview" style="display: none;">PDF File Selected</p>
+                            </div>
+                        </div>
+                    </div>
 
-
-
-                <!-- Success message -->
-                <p id="guarantorSuccessMsg" style="display: none;">Guarantor Saved Successfully!</p>
-
-                <!-- Guarantor Info Display Section -->
-                <div id="guarantorInfo" style="display: none;">
-                    <p>Name: <span id="guarantorNameDisplay"></span></p>
-                    <p>Phone: <span id="guarantorPhoneDisplay"></span></p>
-                    <p>Gender: <span id="guarantorGenderDisplay"></span></p>
-                    <p>Email: <span id="guarantorEmailDisplay"></span></p>
-                    <p>Address: <span id="guarantorAddressDisplay"></span></p>
-                    <p>Avatar: <img id="guarantorAvatarDisplay" style="display: none;" alt="Guarantor Avatar"
-                            width="100" height="100"></p>
-                    <p>Credential: <span id="guarantorCredentialDisplay"></span></p>
+                    <!-- Button to add second guarantor after the first one is filled -->
+                    <div class="pt-6">
+                        <a href="javascript:;" class="btn btn-info me-4" id="addGuarantorBtn2"
+                            style="display: none;">Add Guarantor 2</a>
+                    </div>
                 </div>
 
+                <!-- Second Guarantor Form Section (Initially hidden) -->
+                <div id="guarantorForm2" style="display: none; margin-top: 20px;">
+                    <h5>Guarantor 2 Information</h5>
 
+                    <div class="row g-6">
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-firstName">First Name</label>
+                            <input type="text" class="form-control" id="guarantor2-firstName" name="guarantor2_fname"
+                                placeholder="First Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-middleName">Middle Name</label>
+                            <input type="text" class="form-control" id="guarantor2-middleName"
+                                name="guarantor2_mname" placeholder="Middle Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-lastName">Last Name</label>
+                            <input type="text" class="form-control" id="guarantor2-lastName" name="guarantor2_lname"
+                                placeholder="Last Name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-phone">Phone</label>
+                            <input type="text" class="form-control" id="guarantor2-phone" name="guarantor2_phone"
+                                placeholder="0809 988 0000" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-email">Email</label>
+                            <input type="email" class="form-control" id="guarantor2-email" name="guarantor2_email"
+                                placeholder="email@example.com" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-address">Address</label>
+                            <textarea class="form-control" id="guarantor2-address" name="guarantor2_address" placeholder="Guarantor Address"></textarea>
+                        </div>
+                        <!-- Guarantor 2 Avatar -->
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-avatar">Guarantor 2 Avatar</label>
+                            <input type="file" class="form-control" id="guarantor2-avatar" name="guarantor2_avatar"
+                                accept="image/*" />
+                            <br>
+                            <img id="guarantor2-avatar-preview" src="#" alt="Guarantor 2 Avatar Preview"
+                                style="display: none;" height="150">
+                        </div>
+                        <!-- Guarantor 2 ID -->
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-ID">Guarantor 2 ID (Image or PDF)</label>
+                            <input type="file" class="form-control" id="guarantor2-ID" name="guarantor2_ID"
+                                accept="image/*,application/pdf" />
+                            <br>
+                            <div id="guarantor2-ID-preview" style="display: none;">
+                                <img id="guarantor2-ID-img-preview" src="#" alt="Guarantor 2 ID Image Preview"
+                                    style="display: none;" height="150">
+                                <p id="guarantor2-ID-pdf-preview" style="display: none;">PDF File Selected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="pt-6">
                     <button type="submit" class="btn btn-primary me-4">Submit</button>
                     <button type="reset" class="btn btn-label-secondary">Cancel</button>
-
+                </div>
+            </div>
         </form>
-
-
     </div>
 
 
     <!-- Modal -->
-    @include('radius/_modal/modal-add-guarantor')
+    {{-- @include('radius/_modal/modal-add-guarantor') --}}
 
     <!-- /Modal -->
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
-            const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
-            const addGuarantorBtn = document.getElementById('addGuarantorBtn');
-            const guarantorInfo = document.getElementById('guarantorInfo');
-
-            // Function to handle the file input
-            function getBase64(file, callback) {
+        document.getElementById('profile_image').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = function() {
-                    callback(reader.result);
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('deleteImageButton').style.display = 'inline-block';
                 };
-                reader.onerror = function(error) {
-                    console.log('Error: ', error);
-                };
-                if (file) {
-                    reader.readAsDataURL(file);
-                } else {
-                    callback(null);
-                }
+                reader.readAsDataURL(file);
             }
-
-            // Function to populate guarantor information from localStorage
-            function populateGuarantorFromLocalStorage() {
-                const storedGuarantor = localStorage.getItem('guarantorData');
-                if (storedGuarantor) {
-                    const guarantorData = JSON.parse(storedGuarantor);
-
-                    // Populate the display section with stored data
-                    document.getElementById('guarantorNameDisplay').innerText =
-                        `${guarantorData.firstName} ${guarantorData.middleName} ${guarantorData.lastName}`;
-                    document.getElementById('guarantorPhoneDisplay').innerText = guarantorData.phoneNumber;
-                    document.getElementById('guarantorGenderDisplay').innerText = guarantorData.gender;
-                    document.getElementById('guarantorEmailDisplay').innerText = guarantorData.email;
-                    document.getElementById('guarantorAddressDisplay').innerText = guarantorData.address;
-
-                    // Display avatar if available
-                    if (guarantorData.avatar) {
-                        document.getElementById('guarantorAvatarDisplay').src = guarantorData.avatar;
-                        document.getElementById('guarantorAvatarDisplay').style.display = 'block';
-                    } else {
-                        document.getElementById('guarantorAvatarDisplay').style.display = 'none';
-                    }
-
-                    // Display credential link or text if available
-                    if (guarantorData.credential) {
-                        document.getElementById('guarantorCredentialDisplay').innerHTML =
-                            `<a href="${guarantorData.credential}" download>Download Credential</a>`;
-                    } else {
-                        document.getElementById('guarantorCredentialDisplay').innerHTML = '';
-                    }
-
-                    // Show the Guarantor Info section
-                    guarantorInfo.style.display = 'block';
-                    addGuarantorBtn.textContent = 'Guarantor Saved';
-                    guarantorSuccessMsg.style.display = 'block';
-                }
-            }
-
-            // Call this function when the page loads
-            populateGuarantorFromLocalStorage();
-
-            // Handle saving guarantor data from the modal to the hidden fields and localStorage
-            saveGuarantorBtn.addEventListener('click', function() {
-                const guarantorFName = document.getElementById('guarantor_first_name').value;
-                const guarantorMName = document.getElementById('guarantor_middle_name').value;
-                const guarantorLName = document.getElementById('guarantor_last_name').value;
-                const guarantorPhone = document.getElementById('guarantor_phone_number').value;
-                const guarantorGender = document.getElementById('guarantor_gender').value;
-                const guarantorEmail = document.getElementById('guarantor_email').value;
-                const guarantorAddress = document.getElementById('addressGuarantor').value;
-                const guarantorAvatarFile = document.getElementById('avatarGuarantor').files[
-                0]; // Avatar file
-                const credentialGuarantorFile = document.getElementById('credentialGuarantor').files[
-                0]; // Credential file
-
-                // Get avatar base64 and credential as a downloadable link
-                getBase64(guarantorAvatarFile, function(avatarBase64) {
-                    const guarantorData = {
-                        firstName: guarantorFName,
-                        middleName: guarantorMName,
-                        lastName: guarantorLName,
-                        phoneNumber: guarantorPhone,
-                        gender: guarantorGender,
-                        email: guarantorEmail,
-                        address: guarantorAddress,
-                        avatar: avatarBase64,
-                        credential: credentialGuarantorFile ? URL.createObjectURL(
-                            credentialGuarantorFile) : ''
-                    };
-
-                    localStorage.setItem('guarantorData', JSON.stringify(guarantorData));
-
-                    // Update display section with guarantor information
-                    document.getElementById('guarantorNameDisplay').innerText =
-                        `${guarantorFName} ${guarantorMName} ${guarantorLName}`;
-                    document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
-                    document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
-                    document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
-                    document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
-
-                    // Display avatar
-                    if (avatarBase64) {
-                        document.getElementById('guarantorAvatarDisplay').src = avatarBase64;
-                        document.getElementById('guarantorAvatarDisplay').style.display = 'block';
-                    } else {
-                        document.getElementById('guarantorAvatarDisplay').style.display = 'none';
-                    }
-
-                    // Display credential
-                    if (credentialGuarantorFile) {
-                        document.getElementById('guarantorCredentialDisplay').innerHTML =
-                            `<a href="${URL.createObjectURL(credentialGuarantorFile)}" download>Download Credential</a>`;
-                    } else {
-                        document.getElementById('guarantorCredentialDisplay').innerHTML = '';
-                    }
-
-                    // Show the Guarantor Info section
-                    guarantorInfo.style.display = 'block';
-
-                    // Show success message
-                    guarantorSuccessMsg.style.display = 'block';
-                });
-            });
         });
+
+        document.querySelector('form').addEventListener('reset', function() {
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('deleteImageButton').style.display = 'none';
+        });
+
+        document.getElementById('deleteImageButton').addEventListener('click', function() {
+            document.getElementById('profile_image').value = ''; // Clear the input field
+            document.getElementById('imagePreview').style.display = 'none'; // Hide the preview
+            document.getElementById('deleteImageButton').style.display = 'none'; // Hide the delete button
+        });
+
+
+        // Show Guarantor 1 form when the first button is clicked
+        document.getElementById('addGuarantorBtn').addEventListener('click', function() {
+            const guarantorForm1 = document.getElementById('guarantorForm1');
+            guarantorForm1.style.display = 'block'; // Show the first guarantor form
+            this.style.display = 'none'; // Hide the 'Add Guarantor 1' button
+
+            // Show the 'Add Guarantor 2' button after Guarantor 1 form is displayed
+            const addGuarantorBtn2 = document.getElementById('addGuarantorBtn2');
+            addGuarantorBtn2.style.display = 'block';
+        });
+
+        // Show Guarantor 2 form when the second button is clicked
+        document.getElementById('addGuarantorBtn2').addEventListener('click', function() {
+            const guarantorForm2 = document.getElementById('guarantorForm2');
+            guarantorForm2.style.display = 'block'; // Show the second guarantor form
+            this.style.display = 'none'; // Hide the 'Add Guarantor 2' button
+        });
+
+
+
+        document.getElementById('guarantor1-avatar').addEventListener('change', function(event) {
+            previewImage(event, 'guarantor1-avatar-preview');
+        });
+
+        document.getElementById('guarantor2-avatar').addEventListener('change', function(event) {
+            previewImage(event, 'guarantor2-avatar-preview');
+        });
+
+        document.getElementById('guarantor1-ID').addEventListener('change', function(event) {
+            previewFile(event, 'guarantor1-ID-preview', 'guarantor1-ID-img-preview', 'guarantor1-ID-pdf-preview');
+        });
+
+        document.getElementById('guarantor2-ID').addEventListener('change', function(event) {
+            previewFile(event, 'guarantor2-ID-preview', 'guarantor2-ID-img-preview', 'guarantor2-ID-pdf-preview');
+        });
+
+        // Function to preview image
+        function previewImage(event, imageElementId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewElement = document.getElementById(imageElementId);
+                    previewElement.src = e.target.result;
+                    previewElement.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Function to preview image or PDF for IDs
+        function previewFile(event, previewContainerId, imgElementId, pdfElementId) {
+            const file = event.target.files[0];
+            const previewContainer = document.getElementById(previewContainerId);
+            const imgElement = document.getElementById(imgElementId);
+            const pdfElement = document.getElementById(pdfElementId);
+
+            if (file) {
+                const reader = new FileReader();
+                previewContainer.style.display = 'block';
+
+                // Check if the file is an image
+                if (file.type.startsWith('image/')) {
+                    reader.onload = function(e) {
+                        imgElement.src = e.target.result;
+                        imgElement.style.display = 'block';
+                        pdfElement.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+                // Check if the file is a PDF
+                else if (file.type === 'application/pdf') {
+                    imgElement.style.display = 'none';
+                    pdfElement.style.display = 'block';
+                }
+            }
+        }
+
+
+
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
+        //     const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
+        //     const addGuarantorBtn = document.getElementById('addGuarantorBtn');
+        //     const guarantorInfo = document.getElementById('guarantorInfo');
+
+        //     // Function to handle the file input
+        //     function getBase64(file, callback) {
+        //         const reader = new FileReader();
+        //         reader.onload = function() {
+        //             callback(reader.result);
+        //         };
+        //         reader.onerror = function(error) {
+        //             console.log('Error: ', error);
+        //         };
+        //         if (file) {
+        //             reader.readAsDataURL(file);
+        //         } else {
+        //             callback(null);
+        //         }
+        //     }
+
+        //     // Function to populate guarantor information from localStorage
+        //     function populateGuarantorFromLocalStorage() {
+        //         const storedGuarantor = localStorage.getItem('guarantorData');
+        //         if (storedGuarantor) {
+        //             const guarantorData = JSON.parse(storedGuarantor);
+
+        //             // Populate the display section with stored data
+        //             document.getElementById('guarantorNameDisplay').innerText =
+        //                 `${guarantorData.firstName} ${guarantorData.middleName} ${guarantorData.lastName}`;
+        //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorData.phoneNumber;
+        //             document.getElementById('guarantorGenderDisplay').innerText = guarantorData.gender;
+        //             document.getElementById('guarantorEmailDisplay').innerText = guarantorData.email;
+        //             document.getElementById('guarantorAddressDisplay').innerText = guarantorData.address;
+
+        //             // Display avatar if available
+        //             if (guarantorData.avatar) {
+        //                 document.getElementById('guarantorAvatarDisplay').src = guarantorData.avatar;
+        //                 document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+        //             } else {
+        //                 document.getElementById('guarantorAvatarDisplay').style.display = 'none';
+        //             }
+
+        //             // Display credential link or text if available
+        //             if (guarantorData.credential) {
+        //                 document.getElementById('guarantorCredentialDisplay').innerHTML =
+        //                     `<a href="${guarantorData.credential}" download>Download Credential</a>`;
+        //             } else {
+        //                 document.getElementById('guarantorCredentialDisplay').innerHTML = '';
+        //             }
+
+        //             // Show the Guarantor Info section
+        //             guarantorInfo.style.display = 'block';
+        //             addGuarantorBtn.textContent = 'Guarantor Saved';
+        //             guarantorSuccessMsg.style.display = 'block';
+        //         }
+        //     }
+
+        //     // Call this function when the page loads
+        //     populateGuarantorFromLocalStorage();
+
+        //     // Handle saving guarantor data from the modal to the hidden fields and localStorage
+        //     saveGuarantorBtn.addEventListener('click', function() {
+        //         const guarantorFName = document.getElementById('guarantor_first_name').value;
+        //         const guarantorMName = document.getElementById('guarantor_middle_name').value;
+        //         const guarantorLName = document.getElementById('guarantor_last_name').value;
+        //         const guarantorPhone = document.getElementById('guarantor_phone_number').value;
+        //         const guarantorGender = document.getElementById('guarantor_gender').value;
+        //         const guarantorEmail = document.getElementById('guarantor_email').value;
+        //         const guarantorAddress = document.getElementById('addressGuarantor').value;
+        //         const guarantorAvatarFile = document.getElementById('avatarGuarantor').files[
+        //             0]; // Avatar file
+        //         const credentialGuarantorFile = document.getElementById('credentialGuarantor').files[
+        //             0]; // Credential file
+
+        //         // Get avatar base64 and credential as a downloadable link
+        //         getBase64(guarantorAvatarFile, function(avatarBase64) {
+        //             const guarantorData = {
+        //                 firstName: guarantorFName,
+        //                 middleName: guarantorMName,
+        //                 lastName: guarantorLName,
+        //                 phoneNumber: guarantorPhone,
+        //                 gender: guarantorGender,
+        //                 email: guarantorEmail,
+        //                 address: guarantorAddress,
+        //                 avatar: avatarBase64,
+        //                 credential: credentialGuarantorFile ? URL.createObjectURL(
+        //                     credentialGuarantorFile) : ''
+        //             };
+
+        //             localStorage.setItem('guarantorData', JSON.stringify(guarantorData));
+
+        //             // Update display section with guarantor information
+        //             document.getElementById('guarantorNameDisplay').innerText =
+        //                 `${guarantorFName} ${guarantorMName} ${guarantorLName}`;
+        //             document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
+        //             document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
+        //             document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
+        //             document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
+
+        //             // Display avatar
+        //             if (avatarBase64) {
+        //                 document.getElementById('guarantorAvatarDisplay').src = avatarBase64;
+        //                 document.getElementById('guarantorAvatarDisplay').style.display = 'block';
+        //             } else {
+        //                 document.getElementById('guarantorAvatarDisplay').style.display = 'none';
+        //             }
+
+        //             // Display credential
+        //             if (credentialGuarantorFile) {
+        //                 document.getElementById('guarantorCredentialDisplay').innerHTML =
+        //                     `<a href="${URL.createObjectURL(credentialGuarantorFile)}" download>Download Credential</a>`;
+        //             } else {
+        //                 document.getElementById('guarantorCredentialDisplay').innerHTML = '';
+        //             }
+
+        //             // Show the Guarantor Info section
+        //             guarantorInfo.style.display = 'block';
+
+        //             // Show success message
+        //             guarantorSuccessMsg.style.display = 'block';
+        //         });
+        //     });
+        // });
     </script>
 
 

@@ -38,6 +38,7 @@ class StaffController extends Controller
 
   public function store(Request $request)
   {
+    dd($request);
     // Validate incoming request data
     // dd($request->all());
     //   $validatedData = $request->validate([

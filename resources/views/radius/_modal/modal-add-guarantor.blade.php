@@ -39,7 +39,7 @@
                   </div>
                   <div class="col-12 col-md-4">
                       <label class="form-label" for="guarantor_email">Email</label>
-                      <input type="text" id="guarantor_email" name="guarantor_email" class="form-control" value="" />
+                      <input type="email" id="guarantor_email" name="guarantor_email" class="form-control" value="" />
                   </div>
                   <div class="col-12">
                       <label class="form-label" for="addressGuarantor">Address</label>
@@ -56,16 +56,16 @@
 
                   <!-- File Uploads -->
                   <div class="col-md-6 mb-6">
-                      <label class="form-label" for="guarantor_image">Choose Guarantor Image</label>
-                      <input type="file" id="guarantor_image" class="form-control" name="avatarGuarantor" accept="image/*" />
+                      <label class="form-label" for="avatarGuarantor">Choose Guarantor Image</label>
+                      <input type="file" id="avatarGuarantor" class="form-control" name="avatarGuarantor" accept="image/*" />
                       <br>
                       <img id="imageGuarantorPreview" src="#" height="150" style="display: none;" alt="Guarantor Image Preview">
                       <br>
                       <button type="button" id="deleteGuarantorImageButton" style="display: none;">Delete Image</button>
                   </div>
                   <div class="col-md-6 mb-6">
-                      <label class="form-label" for="guarantor_credential">Choose ID</label>
-                      <input type="file" id="guarantor_credential" class="form-control" name="credentialGuarantor" accept="image/*" />
+                      <label class="form-label" for="credentialGuarantor">Choose ID</label>
+                      <input type="file" id="credentialGuarantor" class="form-control" name="credentialGuarantor" accept="image/*" />
                       <br>
                       <img id="credentialGuarantorPreview" src="#" height="150" style="display: none;" alt="Guarantor ID Preview">
                       <br>
@@ -83,63 +83,97 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const guarantorImageInput = document.getElementById('guarantor_image');
-      const imageGuarantorPreview = document.getElementById('imageGuarantorPreview');
-      const deleteGuarantorImageButton = document.getElementById('deleteGuarantorImageButton');
+document.addEventListener('DOMContentLoaded', function() {
+    const guarantorImageInput = document.getElementById('guarantor_image');
+    const imageGuarantorPreview = document.getElementById('imageGuarantorPreview');
+    const deleteGuarantorImageButton = document.getElementById('deleteGuarantorImageButton');
 
-      const guarantorCredentialInput = document.getElementById('guarantor_credential');
-      const credentialGuarantorPreview = document.getElementById('credentialGuarantorPreview');
-      const deleteGuarantorCredentialButton = document.getElementById('deleteGuarantorCredentialButton');
+    const guarantorCredentialInput = document.getElementById('guarantor_credential');
+    const credentialGuarantorPreview = document.getElementById('credentialGuarantorPreview');
+    const deleteGuarantorCredentialButton = document.getElementById('deleteGuarantorCredentialButton');
 
-      // Function to preview the uploaded guarantor image
-      guarantorImageInput.addEventListener('change', function() {
-          const file = this.files[0];
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  imageGuarantorPreview.src = e.target.result;
-                  imageGuarantorPreview.style.display = 'block';
-                  deleteGuarantorImageButton.style.display = 'block';
-                  guarantorImageInput.style.display = 'none';
-              }
-              reader.readAsDataURL(file);
-          }
-      });
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+    const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-      // Function to delete the guarantor image
-      deleteGuarantorImageButton.addEventListener('click', function() {
-          imageGuarantorPreview.src = '#';
-          imageGuarantorPreview.style.display = 'none';
-          deleteGuarantorImageButton.style.display = 'none';
-          guarantorImageInput.style.display = 'block';
-          guarantorImageInput.value = '';
-      });
+    // Validate file input size and type
+    function validateFile(file) {
+        if (!allowedFileTypes.includes(file.type)) {
+            alert("Invalid file type. Only JPEG, PNG, and GIF are allowed.");
+            return false;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+            alert("File size exceeds 2MB. Please choose a smaller file.");
+            return false;
+        }
+        return true;
+    }
 
-      // Function to preview the uploaded guarantor credential
-      guarantorCredentialInput.addEventListener('change', function() {
-          const file = this.files[0];
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  credentialGuarantorPreview.src = e.target.result;
-                  credentialGuarantorPreview.style.display = 'block';
-                  deleteGuarantorCredentialButton.style.display = 'block';
-                  guarantorCredentialInput.style.display = 'none';
-              }
-              reader.readAsDataURL(file);
-          }
-      });
+    // Function to preview the uploaded guarantor image
+    guarantorImageInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file && validateFile(file)) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imageGuarantorPreview.src = e.target.result;
+                imageGuarantorPreview.style.display = 'block';
+                deleteGuarantorImageButton.style.display = 'block';
+                guarantorImageInput.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            guarantorImageInput.value = ''; // Clear the input if invalid
+        }
+    });
 
-      // Function to delete the guarantor credential
-      deleteGuarantorCredentialButton.addEventListener('click', function() {
-          credentialGuarantorPreview.src = '#';
-          credentialGuarantorPreview.style.display = 'none';
-          deleteGuarantorCredentialButton.style.display = 'none';
-          guarantorCredentialInput.style.display = 'block';
-          guarantorCredentialInput.value = '';
-      });
-  });
+    // Function to delete the guarantor image
+    deleteGuarantorImageButton.addEventListener('click', function() {
+        imageGuarantorPreview.src = '#';
+        imageGuarantorPreview.style.display = 'none';
+        deleteGuarantorImageButton.style.display = 'none';
+        guarantorImageInput.style.display = 'block';
+        guarantorImageInput.value = '';
+    });
+
+    // Function to preview the uploaded guarantor credential
+    guarantorCredentialInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file && validateFile(file)) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                credentialGuarantorPreview.src = e.target.result;
+                credentialGuarantorPreview.style.display = 'block';
+                deleteGuarantorCredentialButton.style.display = 'block';
+                guarantorCredentialInput.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            guarantorCredentialInput.value = ''; // Clear the input if invalid
+        }
+    });
+
+    // Function to delete the guarantor credential
+    deleteGuarantorCredentialButton.addEventListener('click', function() {
+        credentialGuarantorPreview.src = '#';
+        credentialGuarantorPreview.style.display = 'none';
+        deleteGuarantorCredentialButton.style.display = 'none';
+        guarantorCredentialInput.style.display = 'block';
+        guarantorCredentialInput.value = '';
+    });
+
+    // Handle form reset event
+    const guarantorForm = document.getElementById('guarantorForm');
+    guarantorForm.addEventListener('reset', function() {
+        imageGuarantorPreview.style.display = 'none';
+        credentialGuarantorPreview.style.display = 'none';
+        deleteGuarantorImageButton.style.display = 'none';
+        deleteGuarantorCredentialButton.style.display = 'none';
+        guarantorImageInput.style.display = 'block';
+        guarantorCredentialInput.style.display = 'block';
+        guarantorImageInput.value = '';
+        guarantorCredentialInput.value = '';
+    });
+});
+
 </script>
 
 
