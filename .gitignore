@@ -35,3 +35,6 @@ app/Http/Controllers/*/*
 backup zip
 docker
 routes/web copy.php
+
+/backup zip
+base.sql
