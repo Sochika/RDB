@@ -15,6 +15,7 @@ use App\Models\Attendance;
 use App\Models\Beat;
 use App\Models\Shift;
 use App\Models\ShiftType;
+use App\Models\Guarantor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -168,6 +169,59 @@ class StaffController extends Controller
           'document' => $filePath
         ]);
       }
+    }
+
+
+    if ($request->input('guarantor1_fname') && $request->input('guarantor1_lname')) {
+
+      // Handle file uploads
+      $guarantor1AvatarPath = $request->file('guarantor1_avatar') ?
+        $request->file('guarantor1_avatar')->store('guarantors/avatars', 'public') : null;
+
+      $guarantor1CredentialPath = $request->file('guarantor1_ID') ?
+        $request->file('guarantor1_ID')->store('guarantors/credentials', 'public') : null;
+
+      $guarantor = new Guarantor();
+      $guarantor->staff_id = $staff->id;
+      $guarantor->first_name = $request->input('guarantor1_fname');
+      $guarantor->middle_name = $request->input('guarantor1_mname');
+      $guarantor->last_name = $request->input('guarantor1_lname');
+      $guarantor->phone_number = $request->input('guarantor1_phone');
+      $guarantor->gender = $request->input('guarantor1_gender');
+      $guarantor->email = $request->input('guarantor1_email');
+      $guarantor->address = $request->input('guarantor1_address') . ' ' . $request->input('guarantor1_city');
+      $guarantor->area = $request->input('guarantor1_area');
+      // $guarantor->city = $request->input('cityGuarantor');
+      $guarantor->avatar = $guarantor1AvatarPath;
+      $guarantor->ID_document = $guarantor1CredentialPath;
+      $guarantor->created_by = Auth::user()->id; // Assuming you're using Laravel's built-in auth system
+      $guarantor->save();
+    }
+
+    if ($request->input('guarantor2_fname') && $request->input('guarantor2_lname')) {
+
+      // Handle file uploads
+      $guarantor2AvatarPath = $request->file('guarantor2_avatar') ?
+        $request->file('guarantor2_avatar')->store('guarantors/avatars', 'public') : null;
+
+      $guarantor2CredentialPath = $request->file('guarantor2_ID') ?
+        $request->file('guarantor2_ID')->store('guarantors/credentials', 'public') : null;
+
+      $guarantor = new Guarantor();
+      $guarantor->staff_id = $staff->id;
+      $guarantor->first_name = $request->input('guarantor2_fname');
+      $guarantor->middle_name = $request->input('guarantor2_mname');
+      $guarantor->last_name = $request->input('guarantor2_lname');
+      $guarantor->phone_number = $request->input('guarantor2_phone');
+      $guarantor->gender = $request->input('guarantor2_gender');
+      $guarantor->email = $request->input('guarantor2_email');
+      $guarantor->address = $request->input('guarantor2_address') . ' ' . $request->input('guarantor2_city');
+      $guarantor->area = $request->input('guarantor2_area');
+      // $guarantor->city = $request->input('cityGuarantor');
+      $guarantor->avatar = $guarantor2AvatarPath;
+      $guarantor->ID_document = $guarantor2CredentialPath;
+      $guarantor->created_by = Auth::user()->id; // Assuming you're using Laravel's built-in auth system
+      $guarantor->save();
     }
 
     // Handle avatar file upload

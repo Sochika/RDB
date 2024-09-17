@@ -7,9 +7,10 @@
               <div class="text-center mb-6">
                   <h4 class="mb-2">Add Guarantor Information</h4>
               </div>
-              <form id="guarantorForm"class="row g-6" >
-                  {{-- @csrf --}}
+              <form action="{{ route('guarantors.store') }}" method="POST" enctype="multipart/form-data" id="guarantorForm" class="row g-6" >
+                  @csrf
                   <!-- Guarantor Form Fields -->
+                  <input type="text" name="operative_id" value="{{$staff->id}}" hidden>
                   <div class="col-12 col-md-4">
                       <label class="form-label" for="guarantor_first_name">First Name</label>
                       <input type="text" id="guarantor_first_name" name="guarantor_first_name" value="" class="form-control" required />
@@ -54,191 +55,144 @@
                       <input type="text" id="cityGuarantor" name="cityGuarantor" class="form-control" value="" required />
                   </div>
 
-                  <!-- File Uploads -->
-                  <div class="col-md-6 mb-6">
-                      <label class="form-label" for="avatarGuarantor">Choose Guarantor Image</label>
-                      <input type="file" id="avatarGuarantor" class="form-control" name="avatarGuarantor" accept="image/*" />
-                      <br>
-                      <img id="imageGuarantorPreview" src="#" height="150" style="display: none;" alt="Guarantor Image Preview">
-                      <br>
-                      <button type="button" id="deleteGuarantorImageButton" style="display: none;">Delete Image</button>
-                  </div>
-                  <div class="col-md-6 mb-6">
-                      <label class="form-label" for="credentialGuarantor">Choose ID</label>
-                      <input type="file" id="credentialGuarantor" class="form-control" name="credentialGuarantor" accept="image/*" />
-                      <br>
-                      <img id="credentialGuarantorPreview" src="#" height="150" style="display: none;" alt="Guarantor ID Preview">
-                      <br>
-                      <button type="button" id="deleteGuarantorCredentialButton" style="display: none;">Delete ID Image</button>
-                  </div>
 
-                  <div class="col-12 text-center">
-                      <button type="submit" id="saveGuarantorBtn" class="btn btn-primary">Save</button>
-                      <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+
+                    <!-- File Uploads -->
+                    <div class="col-md-6 mb-6">
+                        <label class="form-label" for="avatarGuarantor">Choose Guarantor Image</label>
+                        <input type="file" id="avatarGuarantor" class="form-control" name="avatarGuarantor"
+                            accept="image/*" />
+                        <br>
+                        <img id="imageGuarantorPreview" src="#" height="150" style="display: none;"
+                            alt="Guarantor Image Preview">
+                        <br>
+                        <button type="button" id="deleteGuarantorImageButton" style="display: none;">Delete
+                            Image</button>
+                    </div>
+
+                    <div class="col-md-6 mb-6">
+                        <label class="form-label" for="credentialGuarantor">Choose ID</label>
+                        <input type="file" id="credentialGuarantor" class="form-control"
+                            name="credentialGuarantor" accept="image/*,.pdf" />
+                        <br>
+                        <div id="credentialGuarantorPreviewContainer" style="display: none;">
+                            <img id="credentialGuarantorPreviewImage" src="#" height="150"
+                                style="display: none;" alt="Guarantor ID Preview">
+                            <embed id="credentialGuarantorPreviewPDF" src="#" width="100%" height="150"
+                                style="display: none;" type="application/pdf">
+                        </div>
+                        <br>
+                        <button type="button" id="deleteGuarantorCredentialButton" style="display: none;">Delete ID
+                            File</button>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button type="submit" id="saveGuarantorBtn" class="btn btn-primary">Save</button>
+                        <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const guarantorImageInput = document.getElementById('guarantor_image');
-    const imageGuarantorPreview = document.getElementById('imageGuarantorPreview');
-    const deleteGuarantorImageButton = document.getElementById('deleteGuarantorImageButton');
+    document.addEventListener('DOMContentLoaded', function() {
+        const avatarGuarantorInput = document.getElementById('avatarGuarantor');
+        const imageGuarantorPreview = document.getElementById('imageGuarantorPreview');
+        const deleteGuarantorImageButton = document.getElementById('deleteGuarantorImageButton');
 
-    const guarantorCredentialInput = document.getElementById('guarantor_credential');
-    const credentialGuarantorPreview = document.getElementById('credentialGuarantorPreview');
-    const deleteGuarantorCredentialButton = document.getElementById('deleteGuarantorCredentialButton');
+        const credentialGuarantorInput = document.getElementById('credentialGuarantor');
+        const credentialGuarantorPreviewContainer = document.getElementById(
+            'credentialGuarantorPreviewContainer');
+        const credentialGuarantorPreviewImage = document.getElementById('credentialGuarantorPreviewImage');
+        const credentialGuarantorPreviewPDF = document.getElementById('credentialGuarantorPreviewPDF');
+        const deleteGuarantorCredentialButton = document.getElementById('deleteGuarantorCredentialButton');
 
-    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-    const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const allowedFileTypes = [...allowedImageTypes, 'application/pdf'];
 
-    // Validate file input size and type
-    function validateFile(file) {
-        if (!allowedFileTypes.includes(file.type)) {
-            alert("Invalid file type. Only JPEG, PNG, and GIF are allowed.");
-            return false;
-        }
-        if (file.size > MAX_FILE_SIZE) {
-            alert("File size exceeds 2MB. Please choose a smaller file.");
-            return false;
-        }
-        return true;
-    }
-
-    // Function to preview the uploaded guarantor image
-    guarantorImageInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file && validateFile(file)) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imageGuarantorPreview.src = e.target.result;
-                imageGuarantorPreview.style.display = 'block';
-                deleteGuarantorImageButton.style.display = 'block';
-                guarantorImageInput.style.display = 'none';
+        function validateFile(file) {
+            if (!allowedFileTypes.includes(file.type)) {
+                alert("Invalid file type. Only JPEG, PNG, GIF, and PDF are allowed.");
+                return false;
             }
-            reader.readAsDataURL(file);
-        } else {
-            guarantorImageInput.value = ''; // Clear the input if invalid
-        }
-    });
-
-    // Function to delete the guarantor image
-    deleteGuarantorImageButton.addEventListener('click', function() {
-        imageGuarantorPreview.src = '#';
-        imageGuarantorPreview.style.display = 'none';
-        deleteGuarantorImageButton.style.display = 'none';
-        guarantorImageInput.style.display = 'block';
-        guarantorImageInput.value = '';
-    });
-
-    // Function to preview the uploaded guarantor credential
-    guarantorCredentialInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file && validateFile(file)) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                credentialGuarantorPreview.src = e.target.result;
-                credentialGuarantorPreview.style.display = 'block';
-                deleteGuarantorCredentialButton.style.display = 'block';
-                guarantorCredentialInput.style.display = 'none';
+            if (file.size > MAX_FILE_SIZE) {
+                alert("File size exceeds 2MB. Please choose a smaller file.");
+                return false;
             }
-            reader.readAsDataURL(file);
-        } else {
-            guarantorCredentialInput.value = ''; // Clear the input if invalid
+            return true;
         }
-    });
 
-    // Function to delete the guarantor credential
-    deleteGuarantorCredentialButton.addEventListener('click', function() {
-        credentialGuarantorPreview.src = '#';
-        credentialGuarantorPreview.style.display = 'none';
-        deleteGuarantorCredentialButton.style.display = 'none';
-        guarantorCredentialInput.style.display = 'block';
-        guarantorCredentialInput.value = '';
-    });
+        avatarGuarantorInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file && validateFile(file)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageGuarantorPreview.src = e.target.result;
+                    imageGuarantorPreview.style.display = 'block';
+                    deleteGuarantorImageButton.style.display = 'block';
+                    avatarGuarantorInput.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                avatarGuarantorInput.value = '';
+            }
+        });
 
-    // Handle form reset event
-    const guarantorForm = document.getElementById('guarantorForm');
-    guarantorForm.addEventListener('reset', function() {
-        imageGuarantorPreview.style.display = 'none';
-        credentialGuarantorPreview.style.display = 'none';
-        deleteGuarantorImageButton.style.display = 'none';
-        deleteGuarantorCredentialButton.style.display = 'none';
-        guarantorImageInput.style.display = 'block';
-        guarantorCredentialInput.style.display = 'block';
-        guarantorImageInput.value = '';
-        guarantorCredentialInput.value = '';
-    });
-});
+        deleteGuarantorImageButton.addEventListener('click', function() {
+            imageGuarantorPreview.src = '#';
+            imageGuarantorPreview.style.display = 'none';
+            deleteGuarantorImageButton.style.display = 'none';
+            avatarGuarantorInput.style.display = 'block';
+            avatarGuarantorInput.value = '';
+        });
 
+        credentialGuarantorInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file && validateFile(file)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (file.type === 'application/pdf') {
+                        credentialGuarantorPreviewPDF.src = e.target.result;
+                        credentialGuarantorPreviewPDF.style.display = 'block';
+                        credentialGuarantorPreviewImage.style.display = 'none';
+                    } else {
+                        credentialGuarantorPreviewImage.src = e.target.result;
+                        credentialGuarantorPreviewImage.style.display = 'block';
+                        credentialGuarantorPreviewPDF.style.display = 'none';
+                    }
+                    credentialGuarantorPreviewContainer.style.display = 'block';
+                    deleteGuarantorCredentialButton.style.display = 'block';
+                    credentialGuarantorInput.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                credentialGuarantorInput.value = '';
+            }
+        });
+
+        deleteGuarantorCredentialButton.addEventListener('click', function() {
+            credentialGuarantorPreviewContainer.style.display = 'none';
+            credentialGuarantorPreviewImage.style.display = 'none';
+            credentialGuarantorPreviewPDF.style.display = 'none';
+            deleteGuarantorCredentialButton.style.display = 'none';
+            credentialGuarantorInput.style.display = 'block';
+            credentialGuarantorInput.value = '';
+        });
+
+        const guarantorForm = document.getElementById('guarantorForm');
+        guarantorForm.addEventListener('reset', function() {
+            imageGuarantorPreview.style.display = 'none';
+            credentialGuarantorPreviewContainer.style.display = 'none';
+            deleteGuarantorImageButton.style.display = 'none';
+            deleteGuarantorCredentialButton.style.display = 'none';
+            avatarGuarantorInput.style.display = 'block';
+            credentialGuarantorInput.style.display = 'block';
+            avatarGuarantorInput.value = '';
+            credentialGuarantorInput.value = '';
+        });
+    });
 </script>
-
-
-
-
-{{--
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const saveGuarantorBtn = document.getElementById('saveGuarantorBtn');
-      const guarantorSuccessMsg = document.getElementById('guarantorSuccessMsg');
-      const addGuarantorBtn = document.getElementById('addGuarantorBtn');
-
-      // Handle saving guarantor data from the modal to the hidden fields in the main form
-      saveGuarantorBtn.addEventListener('click', function() {
-          const guarantorFName = document.getElementById('guarantor_first_name').value;
-          const guarantorMName = document.getElementById('guarantor_middle_name').value;
-          const guarantorLName = document.getElementById('guarantor_last_name').value;
-          const guarantorPhone = document.getElementById('guarantor_phone_number').value;
-          const guarantorGender = document.getElementById('guarantor_gender').value;
-          const guarantorEmail = document.getElementById('guarantor_email').value;
-          const guarantorAddress = document.getElementById('addressGuarantor').value;
-
-          // Set hidden input values in the main form
-          document.getElementById('guarantor_fname').value = guarantorFName;
-          document.getElementById('guarantor_mname').value = guarantorMName;
-          document.getElementById('guarantor_lname').value = guarantorLName;
-          document.getElementById('guarantor_phone').value = guarantorPhone;
-          document.getElementById('guarantor_address').value = guarantorAddress;
-
-
-
-          // Update display section with guarantor information
-          document.getElementById('guarantorNameDisplay').innerText = guarantorFName + ' ' + guarantorMName + ' ' + guarantorLName;
-          document.getElementById('guarantorPhoneDisplay').innerText = guarantorPhone;
-          document.getElementById('guarantorGenderDisplay').innerText = guarantorGender;
-          document.getElementById('guarantorEmailDisplay').innerText = guarantorEmail;
-          document.getElementById('guarantorAddressDisplay').innerText = guarantorAddress;
-
-          // Show the Guarantor Info section
-          document.getElementById('guarantorInfo').style.display = 'block';
-
-          // // Show success message
-          // guarantorSuccessMsg.style.display = 'block';
-
-          // // Change the main button text to indicate a guarantor was saved
-          // addGuarantorBtn.textContent = 'Guarantor Saved';
-
-          // // Disable the save button after saving
-          // saveGuarantorBtn.disabled = true;
-
-          // // Close the modal after saving (with a delay for user feedback)
-          // setTimeout(function() {
-          //     const modalGuarantor = new bootstrap.Modal(document.getElementById(
-          //         'modalGuarantor'));
-          //     modalGuarantor.hide();
-          //     guarantorSuccessMsg.style.display =
-          //     'none'; // Hide the success message after modal closes
-          // }, 1000); // Delay of 1 second
-
-          // Show the Guarantor Info section
-          document.getElementById('guarantorInfo').style.display = 'block';
-
-          // Close the modal after saving
-          const modalGuarantor = new bootstrap.Modal(document.getElementById('modalGuarantor'));
-          modalGuarantor.hide();
-      });
-  });
-</script> --}}

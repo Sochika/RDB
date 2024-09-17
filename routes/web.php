@@ -17,6 +17,7 @@ use App\Http\Controllers\UpdateController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\GuarantorController;
 
 // Route::get('/', function () {
 //   return view('welcome');
@@ -75,6 +76,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::post('/staff/graduate', [StaffController::class, 'graduate'])->name('staff.graduate');
   Route::post('/staff/ungraduate', [StaffController::class, 'ungraduate'])->name('staff.ungraduate');
   Route::post('/staff/delete', [StaffController::class, 'delete'])->name('staff.delete');
+
+  Route::get('/guarantors/create', [GuarantorController::class, 'create'])->name('guarantors.create');
+  Route::post('/guarantors', [GuarantorController::class, 'store'])->name('guarantors.store');
+  Route::delete('/guarantors/{id}', [GuarantorController::class, 'destroy'])->name('guarantors.destroy');
+
 
   Route::resource('/beats', BeatController::class)->name('index', 'beats');
   Route::get('/beat/add', [BeatController::class, 'addBeat'])->name('beat.add');

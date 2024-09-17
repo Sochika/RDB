@@ -119,4 +119,9 @@ class Staff extends Model
   {
     return $this->hasMany(Attendance::class);
   }
+
+  public function guarantors()
+  {
+    return $this->hasMany(Guarantor::class);
+  }
 }

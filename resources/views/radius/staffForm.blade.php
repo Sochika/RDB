@@ -176,6 +176,16 @@
                                 placeholder="email@example.com" />
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label" for="guarantor1-gender">Gender</label>
+
+                            <select name="guarantor1_gender" class="form-control" id="guarantor1-gender">
+                                <option value="binary">Not Decided</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label" for="guarantor1-address">Address</label>
                             <textarea class="form-control" id="guarantor1-address" name="guarantor1_address" placeholder="Guarantor Address"></textarea>
                         </div>
@@ -238,6 +248,16 @@
                             <label class="form-label" for="guarantor2-email">Email</label>
                             <input type="email" class="form-control" id="guarantor2-email" name="guarantor2_email"
                                 placeholder="email@example.com" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="guarantor2-gender">Gender</label>
+
+                            <select name="guarantor2_gender" class="form-control" id="guarantor2-gender">
+                                <option value="binary">Not Decided</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+
+                            </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="guarantor2-address">Address</label>
@@ -363,61 +383,103 @@
             }
         }
 
-        // Function to preview image or PDF for IDs
-        function previewFile(event, previewContainerId, imgElementId, pdfElementId) {
-            const file = event.target.files[0];
-            const previewContainer = document.getElementById(previewContainerId);
-            const imgElement = document.getElementById(imgElementId);
-            const pdfElement = document.getElementById(pdfElementId);
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarGuarantorInput = document.getElementById('avatarGuarantor');
+            const imageGuarantorPreview = document.getElementById('imageGuarantorPreview');
+            const deleteGuarantorImageButton = document.getElementById('deleteGuarantorImageButton');
 
-            if (file) {
-                const reader = new FileReader();
-                previewContainer.style.display = 'block';
+            const credentialGuarantorInput = document.getElementById('credentialGuarantor');
+            const credentialGuarantorPreviewContainer = document.getElementById(
+                'credentialGuarantorPreviewContainer');
+            const credentialGuarantorPreviewImage = document.getElementById('credentialGuarantorPreviewImage');
+            const credentialGuarantorPreviewPDF = document.getElementById('credentialGuarantorPreviewPDF');
+            const deleteGuarantorCredentialButton = document.getElementById('deleteGuarantorCredentialButton');
 
-                // Check if the file is an image
-                if (file.type.startsWith('image/')) {
+            const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const allowedFileTypes = [...allowedImageTypes, 'application/pdf'];
+
+            function validateFile(file) {
+                if (!allowedFileTypes.includes(file.type)) {
+                    alert("Invalid file type. Only JPEG, PNG, GIF, and PDF are allowed.");
+                    return false;
+                }
+                if (file.size > MAX_FILE_SIZE) {
+                    alert("File size exceeds 2MB. Please choose a smaller file.");
+                    return false;
+                }
+                return true;
+            }
+
+            avatarGuarantorInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file && validateFile(file)) {
+                    const reader = new FileReader();
                     reader.onload = function(e) {
-                        imgElement.src = e.target.result;
-                        imgElement.style.display = 'block';
-                        pdfElement.style.display = 'none';
+                        imageGuarantorPreview.src = e.target.result;
+                        imageGuarantorPreview.style.display = 'block';
+                        deleteGuarantorImageButton.style.display = 'block';
+                        avatarGuarantorInput.style.display = 'none';
                     };
                     reader.readAsDataURL(file);
+                } else {
+                    avatarGuarantorInput.value = '';
                 }
-                // Check if the file is a PDF
-                else if (file.type === 'application/pdf') {
-                    imgElement.style.display = 'none';
-                    pdfElement.style.display = 'block';
+            });
+
+            deleteGuarantorImageButton.addEventListener('click', function() {
+                imageGuarantorPreview.src = '#';
+                imageGuarantorPreview.style.display = 'none';
+                deleteGuarantorImageButton.style.display = 'none';
+                avatarGuarantorInput.style.display = 'block';
+                avatarGuarantorInput.value = '';
+            });
+
+            credentialGuarantorInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file && validateFile(file)) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (file.type === 'application/pdf') {
+                            credentialGuarantorPreviewPDF.src = e.target.result;
+                            credentialGuarantorPreviewPDF.style.display = 'block';
+                            credentialGuarantorPreviewImage.style.display = 'none';
+                        } else {
+                            credentialGuarantorPreviewImage.src = e.target.result;
+                            credentialGuarantorPreviewImage.style.display = 'block';
+                            credentialGuarantorPreviewPDF.style.display = 'none';
+                        }
+                        credentialGuarantorPreviewContainer.style.display = 'block';
+                        deleteGuarantorCredentialButton.style.display = 'block';
+                        credentialGuarantorInput.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    credentialGuarantorInput.value = '';
                 }
-                // else if (file.type === 'application/pdf') {
-                //     imgElement.style.display = 'none';
-                //     pdfCanvas.style.display = 'block';
+            });
 
-                //     const fileURL = URL.createObjectURL(file);
+            deleteGuarantorCredentialButton.addEventListener('click', function() {
+                credentialGuarantorPreviewContainer.style.display = 'none';
+                credentialGuarantorPreviewImage.style.display = 'none';
+                credentialGuarantorPreviewPDF.style.display = 'none';
+                deleteGuarantorCredentialButton.style.display = 'none';
+                credentialGuarantorInput.style.display = 'block';
+                credentialGuarantorInput.value = '';
+            });
 
-                //     // Use PDF.js to render the PDF
-                //     const loadingTask = pdfjsLib.getDocument(fileURL);
-                //     loadingTask.promise.then(function(pdf) {
-                //         // Fetch the first page
-                //         pdf.getPage(1).then(function(page) {
-                //             const scale = 1.5;
-                //             const viewport = page.getViewport({
-                //                 scale: scale
-                //             });
-                //             const context = pdfCanvas.getContext('2d');
-                //             pdfCanvas.height = viewport.height;
-                //             pdfCanvas.width = viewport.width;
-
-                //             // Render PDF page into the canvas context
-                //             const renderContext = {
-                //                 canvasContext: context,
-                //                 viewport: viewport
-                //             };
-                //             page.render(renderContext);
-                //         });
-                //     });
-                // }
-            }
-        }
+            const guarantorForm = document.getElementById('guarantorForm');
+            guarantorForm.addEventListener('reset', function() {
+                imageGuarantorPreview.style.display = 'none';
+                credentialGuarantorPreviewContainer.style.display = 'none';
+                deleteGuarantorImageButton.style.display = 'none';
+                deleteGuarantorCredentialButton.style.display = 'none';
+                avatarGuarantorInput.style.display = 'block';
+                credentialGuarantorInput.style.display = 'block';
+                avatarGuarantorInput.value = '';
+                credentialGuarantorInput.value = '';
+            });
+        });
     </script>
     <script>
         // Function to set the default date and minimum date to 18 years earlier
