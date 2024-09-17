@@ -160,6 +160,29 @@
       });
   });
   </script>
+  {{-- <script>
+    // Function to set the default date and minimum date to 18 years earlier
+    function setDOBRestrictions() {
+        const dateInput = document.getElementById('modalDateofBirth');
+        const today = new Date();
+
+        // Subtract 18 years from the current date
+        const minDOB = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+
+        // Format the date to YYYY-MM-DD
+        const year = minDOB.getFullYear();
+        const month = String(minDOB.getMonth() + 1).padStart(2, '0'); // Months are zero-based, add 1
+        const day = String(minDOB.getDate()).padStart(2, '0');
+
+        // Set the default value and minimum value in the input field
+        const formattedDate = `${year}-${month}-${day}`;
+        dateInput.value = formattedDate;
+        dateInput.max = formattedDate; // Ensure user can't pick a date that makes them younger than 18
+    }
+
+    // Call the function when the page loads
+    window.onload = setDOBRestrictions;
+</script> --}}
   <!--/ Edit User Modal -->
 
 <!--/ Edit User Modal -->
