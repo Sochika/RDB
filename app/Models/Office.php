@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Office extends Model
 {
-  protected $fillable = ['name'];
+  protected $fillable = ['name', 'level', 'description'];
 
   protected $table = 'offices';
   public function users()

@@ -240,7 +240,7 @@
                         </tr>
                     </thead>
                     <tbody id="staffTableBody">
-                        @foreach ($weekRecruits as $recruit)
+                        @foreach ($recruits as $recruit)
                             <tr>
                                 <td>{{ Carbon\Carbon::parse($recruit->recruit_date)->format('l') }} <br>
                                     {{ Carbon\Carbon::parse($recruit->recruit_date)->format('jS F') }}</td>
@@ -400,6 +400,28 @@
 
 
                                 </td>
+                                <td>
+
+                                  <span class="switch-label">Guarantors Returned:</span>
+                                  <br>
+                                  <label class="switch switch-primary">
+
+                                      <input type="checkbox" class="switch-input" name="gurantor_returned" value="1" />
+                                      <span class="switch-toggle-slider">
+                                          <span class="switch-on">
+                                              <i class="ti ti-check"></i>
+                                          </span>
+                                          <span class="switch-off">
+                                              <i class="ti ti-x"></i>
+                                          </span>
+                                      </span>
+
+                                  </label>
+
+
+
+                              </td>
+
 
                                 <td>
                                     <button class="btn btn-primary" type="submit">Save</button>

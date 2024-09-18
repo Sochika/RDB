@@ -112,6 +112,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   // Route::delete('settings/roles/delete/{id}', [SettingsController::class, 'destroyRole'])->name('roles.delete');
   Route::get('settings/shifts/edit/{id}', [SettingsController::class, 'editShiftype'])->name('shifts.edit');
   Route::delete('settings/shifts/delete/{id}', [SettingsController::class, 'destroyShiftype'])->name('shift_type.delete');
+  Route::post('/settings/office', [SettingsController::class, 'setOffices'])->name('settings.office');
+  Route::delete('/office/delete/{id}', [SettingsController::class, 'deleteOffice'])->name('office.delete');
 
 
   // Route::get('/update', [UpdateController::class, 'update'])->name('update');

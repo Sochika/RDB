@@ -64,6 +64,18 @@
                                     aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
                                         class="d-none d-sm-block">Shifts</span></button>
                             </li>
+                            <li class="nav-item">
+                              <button type="button" class="nav-link " data-bs-toggle="tab"
+                                  data-bs-target="#form-tabs-offices" aria-controls="form-tabs-offices" role="tab"
+                                  aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
+                                      class="d-none d-sm-block">Offices</span></button>
+                          </li>
+                          <li class="nav-item">
+                            <button type="button" class="nav-link " data-bs-toggle="tab"
+                                data-bs-target="#form-tabs-premission" aria-controls="form-tabs-premission" role="tab"
+                                aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
+                                    class="d-none d-sm-block">Premissions</span></button>
+                        </li>
                         </ul>
                     </div>
                 </div>
@@ -309,6 +321,96 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="form-tabs-offices" role="tabpanel">
+                          <div>
+                              <form id="role-form" action="{{ route('settings.office') }}" method="POST">
+                                  @csrf
+                                  <input type="hidden" id="office_id" name="office_id" value="" />
+                                  <div class="row g-6">
+                                      <div class="col-md-6">
+                                          <label class="form-label" for="office">Office</label>
+                                          <input type="text" id="office" name="office" class="form-control"
+                                              placeholder="Admin" />
+                                      </div>
+
+
+
+                                      <div class="col-md-6">
+                                          <label class="form-label" for="office_level">Levels</label>
+                                          <input type="number" id="office_level" name="office_level" class="form-control"
+                                              placeholder="1" />
+                                      </div>
+
+                                      <div class="col-md-6">
+                                          <label class="form-label" for="office_description">Description</label>
+                                          <input type="text" id="office_description" name="office_description" class="form-control"
+                                              placeholder="the new staff" />
+                                      </div>
+                                  </div>
+                                  <div class="pt-6">
+                                      <button type="submit" id="submit-button-office"
+                                          class="btn btn-primary me-4">Submit</button>
+                                      <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                  </div>
+                              </form>
+                          </div>
+                          <hr>
+                          <div>
+                              <table class="table table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th>Office</th>
+                                          {{-- <th>Salary</th> --}}
+                                          <th>Level</th>
+                                          <th>Description</th>
+                                          <th>Actions</th> <!-- Added Actions header -->
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @foreach ($offices as $office)
+                                          <tr>
+                                              <td>{{ $office->name }}</td>
+                                              {{-- <td>{{ number_format($role->salary, 2) }}</td> --}}
+                                              <td>{{ $office->level }}</td>
+                                              <td>{{ $office->description }}</td>
+                                              <td>
+                                                  <button type="button" class="btn btn-secondary btn-sm me-2 edit-office"
+                                                      data-office-id="{{ $office->id }}"
+                                                      data-office-name="{{ $office->name }}"
+                                                      {{-- data-office-salary="{{ $office->salary }}" --}}
+                                                      data-office-level="{{ $office->level }}"
+                                                      data-office-description="{{ $office->description }}">Edit</button>
+                                                  <button type="button" class="btn btn-danger btn-sm delete-office"
+                                                      data-office-id="{{ $office->id }}"
+                                                      data-office-url="{{ route('office.delete', ['id' => $office->id]) }}" disabled>Delete</button>
+                                              </td>
+                                          </tr>
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <div class="tab-pane fade" id="form-tabs-premission" role="tabpanel">
+
+                        <hr>
+                        <div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Office</th>
+                                        {{-- <th>Salary</th> --}}
+                                        {{-- <th>Level</th>
+                                        <th>Description</th>
+                                        <th>Actions</th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
                     </div>
                 </div>
@@ -442,6 +544,55 @@
                         },
                         error: function(xhr) {
                             alert('An error occurred while deleting the shift type');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Handle Edit button click
+            $('.edit-office').on('click', function() {
+                var officeId = $(this).data('office-id');
+                var officeName = $(this).data('office-name');
+                var officeLevel = $(this).data('office-level');
+                var officeDescription = $(this).data('office-description');
+
+                // Populate the form fields
+                $('#office_id').val(officeId);
+                $('#office').val(officeName);
+                $('#office_level').val(officeLevel);
+                $('#office_description').val(officeDescription);
+
+                $('#office').prop('readonly', true);
+
+
+                // Change the form action to update the role
+                $('#office-form').attr('action', '{{ route('settings.office') }}');
+                $('#submit-button-office').text('Update'); // Change button text to "Update"
+            });
+
+            // Handle Delete button click (from previous code)
+            $('.delete-office').on('click', function() {
+                var roleId = $(this).data('office-id');
+                var deleteUrl = $(this).data('office-url');
+
+                if (confirm('Are you sure you want to delete this office?')) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(result) {
+                            alert(result.message);
+                            if (result.success) {
+                                location.reload(); // Reload the page or handle the DOM update
+                            }
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred while deleting the office');
                         }
                     });
                 }
