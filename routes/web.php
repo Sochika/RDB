@@ -141,7 +141,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
 
 
-  Route::get('/rollback-migration', function () {
+  Route::get('/rollback', function () {
     // Check if a user is logged in and if their ID is 1
     if (Auth::check() && Auth::id() == 1) {
       try {

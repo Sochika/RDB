@@ -257,7 +257,7 @@
                                     <td>{{ $recruit->area }} <br> {{ $recruit->sourced_area }}</td>
                                 @endif
                                 <td>{{ $recruit->user->name ?? '' }}</td>
-                                <td colspan="4">{{ ''}}</td>
+                                <td colspan="4">{{ '' }}</td>
                                 <td>{{ $recruit->approve == 1 ? 'Pending' : ($recruit->approve == 3 ? 'Operative' : 'Rejected') }}
                                 </td>
                                 <td>
@@ -267,206 +267,202 @@
                                     <button class="toggle-btn" data-target="sub-row-{{ $recruit->id }}">&#43;</button>
                                 </td>
                             </tr>
-                            @foreach ( $recruit->notes as $note)
-                            <tr id="sub-row-{{ $recruit->id }}" class="sub-row" style="display:none;">
-                              {{-- <td colspan="7"> --}}
-                              <form action="{{ route('recruit.save') }}" method="POST" class="card-body">
-                                  @csrf
-                                  {{-- <form action="{{route('recruit.save')}}" method="post">
-                              @csrf --}}
-                              <input type="hidden" name="note_id" value="{{$note->id ?? null }}">
-                                  <td>
-                                      <label for="read_{{ $recruit->id }}">Can Read:</label>
-                                      <br>
-                                      <div class="rating">
-                                          <input type="hidden" name="recruit_id" value="{{ $recruit->id }}">
-                                          <input type="radio" id="read_star5_{{ $recruit->id }}"
-                                              name="read_{{ $recruit->id }}" value="5"
-                                              @if (isset(json_decode($note->record ?? '{}')->read) &&
-                                                      json_decode($note->record ?? '{}')->read == 5) checked @endif />
-                                          <label for="read_star5_{{ $recruit->id }}" title="5 stars">★</label>
+                            @foreach ($recruit->notes as $note)
+                                <tr id="sub-row-{{ $recruit->id }}" class="sub-row" style="display:none;">
+                                    {{-- <td colspan="7"> --}}
+                                    <form action="{{ route('recruit.save') }}" method="POST" class="card-body">
+                                        @csrf
 
-                                          <input type="radio" id="read_star4_{{ $recruit->id }}"
-                                              name="read_{{ $recruit->id }}" value="4"
-                                              @if (isset(json_decode($note->record ?? '{}')->read) &&
-                                                      json_decode($note->record ?? '{}')->read == 4) checked @endif />
-                                          <label for="read_star4_{{ $recruit->id }}" title="4 stars">★</label>
+                                        <input type="hidden" name="note_id" value="{{ $note->id ?? null }}">
+                                        <td>
+                                            <label for="read_{{ $recruit->id }}">Can Read:</label>
+                                            <br>
+                                            <div class="rating">
+                                                <input type="hidden" name="recruit_id" value="{{ $recruit->id }}">
+                                                <input type="radio" id="read_star5_{{ $recruit->id }}"
+                                                    name="read_{{ $recruit->id }}" value="5"
+                                                    @if (isset(json_decode($note->record ?? '{}')->read) && json_decode($note->record ?? '{}')->read == 5) checked @endif />
+                                                <label for="read_star5_{{ $recruit->id }}" title="5 stars">★</label>
 
-                                          <input type="radio" id="read_star3_{{ $recruit->id }}"
-                                              name="read_{{ $recruit->id }}" value="3"
-                                              @if (isset(json_decode($note->record ?? '{}')->read) &&
-                                                      json_decode($note->record ?? '{}')->read == 3) checked @endif />
-                                          <label for="read_star3_{{ $recruit->id }}" title="3 stars">★</label>
+                                                <input type="radio" id="read_star4_{{ $recruit->id }}"
+                                                    name="read_{{ $recruit->id }}" value="4"
+                                                    @if (isset(json_decode($note->record ?? '{}')->read) && json_decode($note->record ?? '{}')->read == 4) checked @endif />
+                                                <label for="read_star4_{{ $recruit->id }}" title="4 stars">★</label>
 
-                                          <input type="radio" id="read_star2_{{ $recruit->id }}"
-                                              name="read_{{ $recruit->id }}" value="2" @if (isset(json_decode($note->record ?? '{}')->read) &&
-                                                      json_decode($note->record ?? '{}')->read == 2) checked @endif />
-                                          <label for="read_star2_{{ $recruit->id }}" title="2 stars">★</label>
+                                                <input type="radio" id="read_star3_{{ $recruit->id }}"
+                                                    name="read_{{ $recruit->id }}" value="3"
+                                                    @if (isset(json_decode($note->record ?? '{}')->read) && json_decode($note->record ?? '{}')->read == 3) checked @endif />
+                                                <label for="read_star3_{{ $recruit->id }}" title="3 stars">★</label>
 
-                                          <input type="radio" id="read_star1_{{ $recruit->id }}"
-                                              name="read_{{ $recruit->id }}" value="1" @if (isset(json_decode($note->record ?? '{}')->read) &&
-                                                      json_decode($note->record ?? '{}')->read == 1) checked @endif />
-                                          <label for="read_star1_{{ $recruit->id }}" title="1 star">★</label>
-                                      </div>
-                                  </td>
-                                  <td>
-                                      <label for="write_{{ $recruit->id }}">Can Write:</label>
-                                      <br>
-                                      <div class="rating">
-                                          <input type="radio" id="write_star5_{{ $recruit->id }}"
-                                              name="write_{{ $recruit->id }}" value="5" @if (isset(json_decode($note->record ?? '{}')->write) &&
-                                                      json_decode($note->record ?? '{}')->write == 5) checked @endif />
-                                          <label for="write_star5_{{ $recruit->id }}" title="5 stars">★</label>
+                                                <input type="radio" id="read_star2_{{ $recruit->id }}"
+                                                    name="read_{{ $recruit->id }}" value="2"
+                                                    @if (isset(json_decode($note->record ?? '{}')->read) && json_decode($note->record ?? '{}')->read == 2) checked @endif />
+                                                <label for="read_star2_{{ $recruit->id }}" title="2 stars">★</label>
 
-                                          <input type="radio" id="write_star4_{{ $recruit->id }}"
-                                              name="write_{{ $recruit->id }}" value="4" @if (isset(json_decode($note->record ?? '{}')->write) &&
-                                                      json_decode($note->record ?? '{}')->write == 4) checked @endif />
-                                          <label for="write_star4_{{ $recruit->id }}" title="4 stars">★</label>
+                                                <input type="radio" id="read_star1_{{ $recruit->id }}"
+                                                    name="read_{{ $recruit->id }}" value="1"
+                                                    @if (isset(json_decode($note->record ?? '{}')->read) && json_decode($note->record ?? '{}')->read == 1) checked @endif />
+                                                <label for="read_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <label for="write_{{ $recruit->id }}">Can Write:</label>
+                                            <br>
+                                            <div class="rating">
+                                                <input type="radio" id="write_star5_{{ $recruit->id }}"
+                                                    name="write_{{ $recruit->id }}" value="5"
+                                                    @if (isset(json_decode($note->record ?? '{}')->write) && json_decode($note->record ?? '{}')->write == 5) checked @endif />
+                                                <label for="write_star5_{{ $recruit->id }}" title="5 stars">★</label>
 
-                                          <input type="radio" id="write_star3_{{ $recruit->id }}"
-                                              name="write_{{ $recruit->id }}" value="3" @if (isset(json_decode($note->record ?? '{}')->write) &&
-                                                      json_decode($note->record ?? '{}')->write == 3) checked @endif/>
-                                          <label for="write_star3_{{ $recruit->id }}" title="3 stars">★</label>
+                                                <input type="radio" id="write_star4_{{ $recruit->id }}"
+                                                    name="write_{{ $recruit->id }}" value="4"
+                                                    @if (isset(json_decode($note->record ?? '{}')->write) && json_decode($note->record ?? '{}')->write == 4) checked @endif />
+                                                <label for="write_star4_{{ $recruit->id }}" title="4 stars">★</label>
 
-                                          <input type="radio" id="write_star2_{{ $recruit->id }}"
-                                              name="write_{{ $recruit->id }}" value="2" @if (isset(json_decode($note->record ?? '{}')->write) &&
-                                                      json_decode($note->record ?? '{}')->write == 2) checked @endif/>
-                                          <label for="write_star2_{{ $recruit->id }}" title="2 stars">★</label>
+                                                <input type="radio" id="write_star3_{{ $recruit->id }}"
+                                                    name="write_{{ $recruit->id }}" value="3"
+                                                    @if (isset(json_decode($note->record ?? '{}')->write) && json_decode($note->record ?? '{}')->write == 3) checked @endif />
+                                                <label for="write_star3_{{ $recruit->id }}" title="3 stars">★</label>
 
-                                          <input type="radio" id="write_star1_{{ $recruit->id }}"
-                                              name="write_{{ $recruit->id }}" value="1" @if (isset(json_decode($note->record ?? '{}')->write) &&
-                                                      json_decode($note->record ?? '{}')->write == 1) checked @endif/>
-                                          <label for="write_star1_{{ $recruit->id }}" title="1 star">★</label>
-                                      </div>
-                                  </td>
+                                                <input type="radio" id="write_star2_{{ $recruit->id }}"
+                                                    name="write_{{ $recruit->id }}" value="2"
+                                                    @if (isset(json_decode($note->record ?? '{}')->write) && json_decode($note->record ?? '{}')->write == 2) checked @endif />
+                                                <label for="write_star2_{{ $recruit->id }}" title="2 stars">★</label>
 
-                                  <td>
-                                      <label for="communication_{{ $recruit->id }}">Communication:</label>
-                                      <br>
-                                      <div class="rating">
-                                          <input type="radio" id="communication_star5_{{ $recruit->id }}"
-                                              name="communication_{{ $recruit->id }}" value="5" @if (isset(json_decode($note->record ?? '{}')->communication) &&
-                                                      json_decode($note->record ?? '{}')->communication == 5) checked @endif/>
-                                          <label for="communication_star5_{{ $recruit->id }}"
-                                              title="5 stars">★</label>
+                                                <input type="radio" id="write_star1_{{ $recruit->id }}"
+                                                    name="write_{{ $recruit->id }}" value="1"
+                                                    @if (isset(json_decode($note->record ?? '{}')->write) && json_decode($note->record ?? '{}')->write == 1) checked @endif />
+                                                <label for="write_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                            </div>
+                                        </td>
 
-                                          <input type="radio" id="communication_star4_{{ $recruit->id }}"
-                                              name="communication_{{ $recruit->id }}" value="4" @if (isset(json_decode($note->record ?? '{}')->communication) &&
-                                                      json_decode($note->record ?? '{}')->communication == 4) checked @endif/>
-                                          <label for="communication_star4_{{ $recruit->id }}"
-                                              title="4 stars">★</label>
+                                        <td>
+                                            <label for="communication_{{ $recruit->id }}">Communication:</label>
+                                            <br>
+                                            <div class="rating">
+                                                <input type="radio" id="communication_star5_{{ $recruit->id }}"
+                                                    name="communication_{{ $recruit->id }}" value="5"
+                                                    @if (isset(json_decode($note->record ?? '{}')->communication) && json_decode($note->record ?? '{}')->communication == 5) checked @endif />
+                                                <label for="communication_star5_{{ $recruit->id }}"
+                                                    title="5 stars">★</label>
 
-                                          <input type="radio" id="communication_star3_{{ $recruit->id }}"
-                                              name="communication_{{ $recruit->id }}" value="3" @if (isset(json_decode($note->record ?? '{}')->communication) &&
-                                                      json_decode($note->record ?? '{}')->communication == 3) checked @endif/>
-                                          <label for="communication_star3_{{ $recruit->id }}"
-                                              title="3 stars">★</label>
+                                                <input type="radio" id="communication_star4_{{ $recruit->id }}"
+                                                    name="communication_{{ $recruit->id }}" value="4"
+                                                    @if (isset(json_decode($note->record ?? '{}')->communication) && json_decode($note->record ?? '{}')->communication == 4) checked @endif />
+                                                <label for="communication_star4_{{ $recruit->id }}"
+                                                    title="4 stars">★</label>
 
-                                          <input type="radio" id="communication_star2_{{ $recruit->id }}"
-                                              name="communication_{{ $recruit->id }}" value="2" @if (isset(json_decode($note->record ?? '{}')->communication) &&
-                                                      json_decode($note->record ?? '{}')->communication == 2) checked @endif/>
-                                          <label for="communication_star2_{{ $recruit->id }}"
-                                              title="2 stars">★</label>
+                                                <input type="radio" id="communication_star3_{{ $recruit->id }}"
+                                                    name="communication_{{ $recruit->id }}" value="3"
+                                                    @if (isset(json_decode($note->record ?? '{}')->communication) && json_decode($note->record ?? '{}')->communication == 3) checked @endif />
+                                                <label for="communication_star3_{{ $recruit->id }}"
+                                                    title="3 stars">★</label>
 
-                                          <input type="radio" id="communication_star1_{{ $recruit->id }}"
-                                              name="communication_{{ $recruit->id }}" value="1" @if (isset(json_decode($note->record ?? '{}')->communication) &&
-                                                      json_decode($note->record ?? '{}')->communication == 1) checked @endif/>
-                                          <label for="communication_star1_{{ $recruit->id }}" title="1 star">★</label>
-                                      </div>
-                                  </td>
+                                                <input type="radio" id="communication_star2_{{ $recruit->id }}"
+                                                    name="communication_{{ $recruit->id }}" value="2"
+                                                    @if (isset(json_decode($note->record ?? '{}')->communication) && json_decode($note->record ?? '{}')->communication == 2) checked @endif />
+                                                <label for="communication_star2_{{ $recruit->id }}"
+                                                    title="2 stars">★</label>
+
+                                                <input type="radio" id="communication_star1_{{ $recruit->id }}"
+                                                    name="communication_{{ $recruit->id }}" value="1"
+                                                    @if (isset(json_decode($note->record ?? '{}')->communication) && json_decode($note->record ?? '{}')->communication == 1) checked @endif />
+                                                <label for="communication_star1_{{ $recruit->id }}"
+                                                    title="1 star">★</label>
+                                            </div>
+                                        </td>
 
 
-                                  <td>
-                                      <label for="exposure_{{ $recruit->id }}">Exposure:</label>
-                                      <br>
-                                      <div class="rating">
-                                          <input type="radio" id="exposure_star5_{{ $recruit->id }}"
-                                              name="exposure_{{ $recruit->id }}" value="5" @if (isset(json_decode($note->record ?? '{}')->exposure) &&
-                                                      json_decode($note->record ?? '{}')->exposure == 5) checked @endif />
-                                          <label for="exposure_star5_{{ $recruit->id }}" title="5 stars">★</label>
+                                        <td>
+                                            <label for="exposure_{{ $recruit->id }}">Exposure:</label>
+                                            <br>
+                                            <div class="rating">
+                                                <input type="radio" id="exposure_star5_{{ $recruit->id }}"
+                                                    name="exposure_{{ $recruit->id }}" value="5"
+                                                    @if (isset(json_decode($note->record ?? '{}')->exposure) && json_decode($note->record ?? '{}')->exposure == 5) checked @endif />
+                                                <label for="exposure_star5_{{ $recruit->id }}" title="5 stars">★</label>
 
-                                          <input type="radio" id="exposure_star4_{{ $recruit->id }}"
-                                              name="exposure_{{ $recruit->id }}" value="4" @if (isset(json_decode($note->record ?? '{}')->exposure) &&
-                                                      json_decode($note->record ?? '{}')->exposure == 4) checked @endif />
-                                          <label for="exposure_star4_{{ $recruit->id }}" title="4 stars">★</label>
+                                                <input type="radio" id="exposure_star4_{{ $recruit->id }}"
+                                                    name="exposure_{{ $recruit->id }}" value="4"
+                                                    @if (isset(json_decode($note->record ?? '{}')->exposure) && json_decode($note->record ?? '{}')->exposure == 4) checked @endif />
+                                                <label for="exposure_star4_{{ $recruit->id }}" title="4 stars">★</label>
 
-                                          <input type="radio" id="exposure_star3_{{ $recruit->id }}"
-                                              name="exposure_{{ $recruit->id }}" value="3" @if (isset(json_decode($note->record ?? '{}')->exposure) &&
-                                                      json_decode($note->record ?? '{}')->exposure == 3) checked @endif />
-                                          <label for="exposure_star3_{{ $recruit->id }}" title="3 stars">★</label>
+                                                <input type="radio" id="exposure_star3_{{ $recruit->id }}"
+                                                    name="exposure_{{ $recruit->id }}" value="3"
+                                                    @if (isset(json_decode($note->record ?? '{}')->exposure) && json_decode($note->record ?? '{}')->exposure == 3) checked @endif />
+                                                <label for="exposure_star3_{{ $recruit->id }}" title="3 stars">★</label>
 
-                                          <input type="radio" id="exposure_star2_{{ $recruit->id }}"
-                                              name="exposure_{{ $recruit->id }}" value="2" @if (isset(json_decode($note->record ?? '{}')->exposure) &&
-                                                      json_decode($note->record ?? '{}')->exposure == 2) checked @endif />
-                                          <label for="exposure_star2_{{ $recruit->id }}" title="2 stars">★</label>
+                                                <input type="radio" id="exposure_star2_{{ $recruit->id }}"
+                                                    name="exposure_{{ $recruit->id }}" value="2"
+                                                    @if (isset(json_decode($note->record ?? '{}')->exposure) && json_decode($note->record ?? '{}')->exposure == 2) checked @endif />
+                                                <label for="exposure_star2_{{ $recruit->id }}" title="2 stars">★</label>
 
-                                          <input type="radio" id="exposure_star1_{{ $recruit->id }}"
-                                              name="exposure_{{ $recruit->id }}" value="1" @if (isset(json_decode($note->record ?? '{}')->exposure) &&
-                                                      json_decode($note->record ?? '{}')->exposure == 1) checked @endif />
-                                          <label for="exposure_star1_{{ $recruit->id }}" title="1 star">★</label>
-                                      </div>
-                                  </td>
+                                                <input type="radio" id="exposure_star1_{{ $recruit->id }}"
+                                                    name="exposure_{{ $recruit->id }}" value="1"
+                                                    @if (isset(json_decode($note->record ?? '{}')->exposure) && json_decode($note->record ?? '{}')->exposure == 1) checked @endif />
+                                                <label for="exposure_star1_{{ $recruit->id }}" title="1 star">★</label>
+                                            </div>
+                                        </td>
 
-                                  <td colspan="4">
-                                      <label for="additional_info_{{ $recruit->id }}">Additional Information:</label>
-                                      <br>
-                                      <textarea class="form-control" name="additional_info_{{ $recruit->id }}" rows="1">{{ $note->note ?? '' }}</textarea>
-                                  </td>
-                                  <td>
+                                        <td colspan="4">
+                                            <label for="additional_info_{{ $recruit->id }}">Additional
+                                                Information:</label>
+                                            <br>
+                                            <textarea class="form-control" name="additional_info_{{ $recruit->id }}" rows="1">{{ $note->note ?? '' }}</textarea>
+                                        </td>
+                                        <td>
 
-                                      <span class="switch-label">Form Given:</span>
-                                      <br>
-                                      <label class="switch switch-primary">
+                                            <span class="switch-label">Form Given:</span>
+                                            <br>
+                                            <label class="switch switch-primary">
 
-                                          <input type="checkbox" class="switch-input" name="form_given"
-                                              value="1" @if (isset(json_decode($note->record ?? '{}')->form_given) &&
-                                                      json_decode($note->record ?? '{}')->form_given == 1) checked @endif />
-                                          <span class="switch-toggle-slider">
-                                              <span class="switch-on">
-                                                  <i class="ti ti-check"></i>
-                                              </span>
-                                              <span class="switch-off">
-                                                  <i class="ti ti-x"></i>
-                                              </span>
-                                          </span>
+                                                <input type="checkbox" class="switch-input" name="form_given"
+                                                    value="1" @if (isset(json_decode($note->record ?? '{}')->form_given) && json_decode($note->record ?? '{}')->form_given == 1) checked @endif />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="ti ti-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="ti ti-x"></i>
+                                                    </span>
+                                                </span>
 
-                                      </label>
+                                            </label>
 
 
 
-                                  </td>
-                                  <td>
+                                        </td>
+                                        <td>
 
-                                      <span class="switch-label">Guarantors Returned:</span>
-                                      <br>
-                                      <label class="switch switch-primary">
+                                            <span class="switch-label">Guarantors Returned:</span>
+                                            <br>
+                                            <label class="switch switch-primary">
 
-                                          <input type="checkbox" class="switch-input" name="form_returned"
-                                              value="1" @if (isset(json_decode($note->record ?? '{}')->form_returned) &&
-                                                      json_decode($note->record ?? '{}')->form_returned == 1) checked @endif />
-                                          <span class="switch-toggle-slider">
-                                              <span class="switch-on">
-                                                  <i class="ti ti-check"></i>
-                                              </span>
-                                              <span class="switch-off">
-                                                  <i class="ti ti-x"></i>
-                                              </span>
-                                          </span>
+                                                <input type="checkbox" class="switch-input" name="form_returned"
+                                                    value="1" @if (isset(json_decode($note->record ?? '{}')->form_returned) && json_decode($note->record ?? '{}')->form_returned == 1) checked @endif />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="ti ti-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="ti ti-x"></i>
+                                                    </span>
+                                                </span>
 
-                                      </label>
-
+                                            </label>
 
 
-                                  </td>
+
+                                        </td>
 
 
-                                  <td>
-                                      <button class="btn btn-primary" type="submit">Save</button>
-                                      {{-- <button class="btn btn-success" type="submit_all">Submit</button> --}}
-                                  </td>
-                              </form>
-                              {{-- </td> --}}
-                          </tr>
+                                        <td>
+                                            <button class="btn btn-primary" type="submit">Save</button>
+                                            {{-- <button class="btn btn-success" type="submit_all">Submit</button> --}}
+                                        </td>
+                                    </form>
+                                    {{-- </td> --}}
+                                </tr>
                             @endforeach
                         @endforeach
                     </tbody>

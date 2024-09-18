@@ -210,7 +210,7 @@
                 <div id="pdfHeader" style="display: none">
                     <img src="{{ asset('assets/logo/login_logo.png') }}" alt="Logo" style="height: 50px;">
 
-                    <h1>Unattended Recruit</h1>
+                    <h1>Operatives Training</h1>
                     <p>Date: <span id="reportWeek"></span></p>
                     <p>Presenter: {{ Auth::user()->name }}</p>
                 </div>
@@ -227,13 +227,13 @@
                             <th>Date</th>
                             <th>Operatives</th>
                             {{-- <th>Phone Number</th> --}}
-                            <th> Area Of Recruit</th>
+                            <th> Area Of Beat</th>
                             <th>Beat</th>
 
                             <th colspan="4"> Note</th>
                             <th>Status</th>
                             {{-- @if (Auth::user()->level >= $level) --}}
-                            <th>Added</th>
+                            <th>Issues</th>
                             <th>Action</th>
 
                             {{-- @endif --}}
