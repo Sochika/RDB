@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class AdminController extends Controller
+class TrainingController extends Controller
 {
 
   public function index()
@@ -53,7 +53,7 @@ class AdminController extends Controller
   }
 
 
-  public function alleads()
+  public function operatives()
   {
     $states = States::get();
 
@@ -70,7 +70,7 @@ class AdminController extends Controller
       Carbon::now()->endOfWeek()
     ])->get();
     $level = 2;
-    return view('radius.admin.leads', compact('leads', 'myleads', 'leadOnboarded', 'myleadOnboarded', 'states', 'leadTerminated', 'myleadTerminated',  'leadsFailed', 'myleadsFailed', 'level'));
+    return view('radius.training.operatives', compact('leads', 'myleads', 'leadOnboarded', 'myleadOnboarded', 'states', 'leadTerminated', 'myleadTerminated',  'leadsFailed', 'myleadsFailed', 'level'));
   }
 
 
@@ -98,7 +98,7 @@ class AdminController extends Controller
   {
     $states = States::get();
 
-    $recruits = Recruit::all();
+    $recruits = Recruit::where('approve', 1)->get();
     $recruitsApproved = Recruit::where('approve', 1)->whereNotNull('staff_id')->get();
     $recruitsGraduated = '??';
     $recruitsFailed = Recruit::where('approve', 2)->count();
@@ -107,7 +107,7 @@ class AdminController extends Controller
       Carbon::now()->endOfWeek()
     ])->get();
     $level = 2;
-    return view('radius.admin.recruit', compact('recruits', 'recruitsApproved', 'states', 'recruitsGraduated', 'recruitsFailed', 'weekRecruits', 'level'));
+    return view('radius.training.recruit', compact('recruits', 'recruitsApproved', 'states', 'recruitsGraduated', 'recruitsFailed', 'weekRecruits', 'level'));
   }
 
 

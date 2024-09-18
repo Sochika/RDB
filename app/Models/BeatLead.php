@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Prompts\Note;
 
 class BeatLead extends Model
 {
@@ -36,7 +37,7 @@ class BeatLead extends Model
 
   public function leadDetails()
   {
-    return $this->hasMany(LeadDetail::class, 'lead_id', 'id');
+    return $this->hasMany(Notes::class, 'lead_id', 'id');
   }
 
   public function user()

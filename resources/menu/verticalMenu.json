@@ -60,14 +60,14 @@
       "slug": "market",
       "submenu": [
         {
-          "url": "/admin/leads",
-          "name": "Recruits",
-          "slug": "admin.leads"
+          "url": "/training/operatives",
+          "name": "Operatives",
+          "slug": "training.operatives"
         },
         {
-          "url": "/admin/recruits",
-          "name": "Operatives",
-          "slug": "admin.recruits"
+          "url": "/training/recruits",
+          "name": "Recruits",
+          "slug": "training.recruits"
         }
       ]
     },

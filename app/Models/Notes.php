@@ -29,4 +29,9 @@ class Notes extends Model
     'approve',
     'onboard',
   ];
+
+  public function recruit()
+  {
+    return $this->belongsTo(Recruit::class, 'recruit_id');
+  }
 }

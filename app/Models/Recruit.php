@@ -39,4 +39,14 @@ class Recruit extends Model
   {
     return $this->belongsTo(User::class, 'created_by');
   }
+  // A recruit can have many notes
+  public function notes()
+  {
+    return $this->hasMany(Notes::class, 'recruit_id');
+  }
+
+  // public function notes()
+  // {
+  //   return $this->belongsTo(Notes::class, 'recruit_id');
+  // }
 }

@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\GuarantorController;
+use App\Http\Controllers\TrainingController;
+use App\Models\Training;
 
 // Route::get('/', function () {
 //   return view('welcome');
@@ -48,7 +50,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   // Route::post('/lead/store', [AdminController::class, 'beatSave'])->name('lead.store');
   Route::post('/admin/get-week-recruits', [AdminController::class, 'admin.getWeekRecruits']);
   Route::post('/admin/get-week-leads', [AdminController::class, 'admin.getWeekLeads']);
+  Route::post('/recruit/save', [AdminController::class, 'saveNote'])->name('recruit.save');
 
+
+  // Training
+  Route::get('/training/recruits', [TrainingController::class, 'recruits'])->name('training.recruits');
+  Route::get('/training/operatives', [TrainingController::class, 'operatives'])->name('training.operatives');
+
+  // Marketing
   // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
   Route::get('/market', [MarketController::class, 'index'])->name('market');
   Route::get('/leads', [MarketController::class, 'leads'])->name('leads');
