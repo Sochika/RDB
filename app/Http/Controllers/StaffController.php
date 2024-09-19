@@ -39,7 +39,7 @@ class StaffController extends Controller
 
   public function store(Request $request)
   {
-    dd($request);
+    // dd($request);
     // Validate incoming request data
     // dd($request->all());
     //   $validatedData = $request->validate([
@@ -137,6 +137,7 @@ class StaffController extends Controller
     $staff->state = $request->state;
     $staff->date_of_birth = $request->date_of_birth;
     $staff->gender = $request->gender;
+    $staff->staff_no = $request->staff_no;
     $staff->hire_date = $request->hire_date;
     $staff->role_id = $request['role_id'];
     $staff->latitude = $request->latitude;
@@ -249,6 +250,7 @@ class StaffController extends Controller
       'city' => 'nullable|string|max:255',
       'state' => 'nullable|string|max:255',
       'date_of_birth' => 'nullable|date',
+      'staff_no' => 'nullable|string|max:255',
       'gender' => 'nullable|string',
       'hire_date' => 'nullable|date',
       'role_id' => 'required|integer',

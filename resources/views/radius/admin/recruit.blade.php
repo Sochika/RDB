@@ -56,7 +56,29 @@
             margin: 0 2px;
             /* Add margin between stars */
         }
+
+        /* CSS for smooth transition
+            tr.sub-row {
+                transition: height 0.3s ease;
+                overflow: hidden;
+                height: 0;
+            }
+
+            tr.sub-row.open {
+                height: auto;
+            } */
     </style>
+
+    <style>
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+
+
 @endsection
 
 @section('vendor-script')
@@ -607,14 +629,7 @@
         });
     </script>
 
-    <style>
-        .toggle-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-        }
-    </style>
+
 
 
 
