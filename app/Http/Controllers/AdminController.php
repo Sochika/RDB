@@ -98,7 +98,7 @@ class AdminController extends Controller
   {
     $states = States::get();
 
-    $recruits = Recruit::all();
+    $recruits = Recruit::where('approve', '<', 2)->get();
     $recruitsApproved = Recruit::where('approve', 1)->whereNotNull('staff_id')->get();
     $recruitsGraduated = '??';
     $recruitsFailed = Recruit::where('approve', 2)->count();
@@ -148,7 +148,7 @@ class AdminController extends Controller
     $recruit->state = $request->state;
     $recruit->gender = $request->gender;
     $recruit->recruit_date = $request->recruit_date;
-    $recruit->created_by = $request->created_by == 'none' || $request->created_by == '' ? Auth::user()->id : $request->created_by;
+    $recruit->created_by = $request->created_by == 'none' || $request->created_by == null ? Auth::user()->id : $request->created_by;
     $recruit->referral = $request->referral;
 
     $recruit->save();
@@ -288,12 +288,21 @@ class AdminController extends Controller
       $note->recruit_id = $request->recruit_id;
       $note->record = $jsonRecord;
       $note->approve = $request->form_given ?? 0;
+      if ($request->form_returned) {
+        $note->approve = $request->form_returned ? 3 : 0;
+      }
       $note->note = $request->input('additional_info_' . $request->recruit_id);
     }
 
     // Save or update the note
     $note->save();
 
+    $recruit = Recruit::where('id', $request->recruit_id)->first();
+    $recruit->approve = $request->form_given ?? 0;
+    if ($request->form_returned) {
+      $recruit->approve = $request->form_returned ? 3 : 0;
+    }
+    $recruit->save();
     // Return with a success message
     return redirect()->back()->with('success', $note->recruit->first_name . $note->recruit->last_name . ' updated successfully.');
   }
