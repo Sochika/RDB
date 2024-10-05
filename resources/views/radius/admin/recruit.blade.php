@@ -58,15 +58,15 @@
         }
 
         /* CSS for smooth transition
-                                                tr.sub-row {
-                                                    transition: height 0.3s ease;
-                                                    overflow: hidden;
-                                                    height: 0;
-                                                }
+                                                    tr.sub-row {
+                                                        transition: height 0.3s ease;
+                                                        overflow: hidden;
+                                                        height: 0;
+                                                    }
 
-                                                tr.sub-row.open {
-                                                    height: auto;
-                                                } */
+                                                    tr.sub-row.open {
+                                                        height: auto;
+                                                    } */
     </style>
 
     <style>
@@ -152,7 +152,6 @@
                                 <h4 class="mb-0 me-2">{{ $recruitsApproved->count() }}</h4>
                                 {{-- <p class="text-danger mb-0">(-14%)</p> --}}
                             </div>
-                            {{-- <small class="mb-0">Last week analytics</small> --}}
                         </div>
                         <a href="{{ route('admin.allRecruits') }}">
                             <div class="avatar">
@@ -175,7 +174,6 @@
                                 <h4 class="mb-0 me-2">{{ $recruitsFailed }}</h4>
                                 {{-- <p class="text-success mb-0">(+18%)</p> --}}
                             </div>
-                            {{-- <small class="mb-0">Last week analytics </small> --}}
                         </div>
                         <a href="{{ route('admin.allRecruits') }}">
                             <div class="avatar">
@@ -199,7 +197,6 @@
                                 <h4 class="mb-0 me-2">{{ $recruitsGraduated }}</h4>
                                 {{-- <p class="text-success mb-0">(+42%)</p> --}}
                             </div>
-                            {{-- <small class="mb-0">Last week analytics</small> --}}
                         </div>
                         <a href="{{ route('admin.allRecruits') }}">
                             <div class="avatar">
@@ -384,11 +381,24 @@
                                         </td>
 
                                         <!-- Guarantors Returned switch -->
-                                        <td>
+                                        <td id="form_returned{{ $recruit->id }}">
                                             <span class="switch-label">Guarantors Returned:</span><br>
                                             <label class="switch switch-primary">
                                                 <input type="checkbox" class="switch-input" name="form_returned"
                                                     value="1" @if (isset(json_decode($note->record ?? '{}')->form_returned) && json_decode($note->record ?? '{}')->form_returned == 1) checked @endif />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"><i class="ti ti-check"></i></span>
+                                                    <span class="switch-off"><i class="ti ti-x"></i></span>
+                                                </span>
+                                            </label>
+                                        </td>
+
+                                        <!-- Rejected switch -->
+                                        <td id="rejected_{{ $recruit->id }}">
+                                            <span class="switch-label">Rejected:</span><br>
+                                            <label class="switch switch-primary">
+                                                <input type="checkbox" class="switch-input" name="form_rejected"
+                                                    value="1" @if (isset(json_decode($note->record ?? '{}')->form_rejected) && json_decode($note->record ?? '{}')->form_rejected == 1) checked @endif />
                                                 <span class="switch-toggle-slider">
                                                     <span class="switch-on"><i class="ti ti-check"></i></span>
                                                     <span class="switch-off"><i class="ti ti-x"></i></span>
@@ -453,7 +463,7 @@
                                         </td>
 
                                         <!-- Form Given switch -->
-                                        <td>
+                                        <td id="form_given_{{ $recruit->id }}">
                                             <span class="switch-label">Form Given:</span><br>
                                             <label class="switch switch-primary">
                                                 <input type="checkbox" class="switch-input" name="form_given"
@@ -466,7 +476,7 @@
                                         </td>
 
                                         <!-- Guarantors Returned switch -->
-                                        <td>
+                                        <td id="form_returned_{{ $recruit->id }}">
                                             <span class="switch-label">Guarantors Returned:</span><br>
                                             <label class="switch switch-primary">
                                                 <input type="checkbox" class="switch-input" name="form_returned"
@@ -477,6 +487,20 @@
                                                 </span>
                                             </label>
                                         </td>
+
+                                        <!-- Rejected switch -->
+                                        <td id="rejected_{{ $recruit->id }}">
+                                            <span class="switch-label">Rejected:</span><br>
+                                            <label class="switch switch-primary">
+                                                <input type="checkbox" class="switch-input" name="form_rejected"
+                                                    value="1" />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"><i class="ti ti-check"></i></span>
+                                                    <span class="switch-off"><i class="ti ti-x"></i></span>
+                                                </span>
+                                            </label>
+                                        </td>
+
 
                                         <!-- Submit button -->
                                         <td>
@@ -587,6 +611,8 @@
 
 
     <script>
+
+
         document.addEventListener('DOMContentLoaded', function() {
             // Add event listener to all toggle buttons
             document.querySelectorAll('.toggle-btn').forEach(function(button) {
@@ -684,6 +710,25 @@
     </script>
 
     <script>
+           $(document).ready(function() {
+            // When the Form Given switch is clicked
+            $(document).on('click', 'input[name="form_given"]', function() {
+                let recruitId = $(this).closest('td').attr('id').split('_')[1]; // Get the recruit ID
+
+                // Show the Guarantors Returned switch and hide the Rejected switch
+                $('#form_returned_' + recruitId).show();
+                $('#rejected_' + recruitId).hide();
+            });
+
+            // When the Rejected switch is clicked
+            $(document).on('click', 'input[name="form_rejected"]', function() {
+                let recruitId = $(this).closest('td').attr('id').split('_')[1]; // Get the recruit ID
+
+                // Hide the Form Given and Guarantors Returned switches
+                $('#form_given_' + recruitId).closest('td').hide();
+                $('#form_returned_' + recruitId).hide();
+            });
+        });
         // Script to toggle sub-rows
         // document.querySelectorAll('.toggle-btn').forEach(button => {
         //     button.addEventListener('click', function() {

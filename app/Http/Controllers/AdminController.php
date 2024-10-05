@@ -98,7 +98,9 @@ class AdminController extends Controller
   {
     $states = States::get();
 
-    $recruits = Recruit::where('approve', '<', 2)->get();
+    $recruits = Recruit::where('approve', '<', 2)
+      ->orderBy('approve', 'desc') // Sort by ascending order
+      ->get();
     $recruitsApproved = Recruit::where('approve', 1)->whereNotNull('staff_id')->get();
     $recruitsGraduated = '??';
     $recruitsFailed = Recruit::where('approve', 2)->count();
@@ -291,6 +293,9 @@ class AdminController extends Controller
       if ($request->form_returned) {
         $note->approve = $request->form_returned ? 3 : 0;
       }
+      if ($request->form_rejected) {
+        $note->approve = $request->form_rejected ? 2 : 0;
+      }
       $note->note = $request->input('additional_info_' . $request->recruit_id);
     }
 
@@ -301,6 +306,9 @@ class AdminController extends Controller
     $recruit->approve = $request->form_given ?? 0;
     if ($request->form_returned) {
       $recruit->approve = $request->form_returned ? 3 : 0;
+    }
+    if ($request->form_rejected) {
+      $recruit->approve = $request->form_rejected ? 2 : 0;
     }
     $recruit->save();
     // Return with a success message
