@@ -123,6 +123,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::delete('settings/shifts/delete/{id}', [SettingsController::class, 'destroyShiftype'])->name('shift_type.delete');
   Route::post('/settings/office', [SettingsController::class, 'setOffices'])->name('settings.office');
   Route::delete('/office/delete/{id}', [SettingsController::class, 'deleteOffice'])->name('office.delete');
+  Route::post('/settings/zone', [SettingsController::class, 'setZones'])->name('settings.zones');
+  Route::delete('/zone/delete/{id}', [SettingsController::class, 'deleteZone'])->name('zone.delete');
+  Route::post('/settings/area', [SettingsController::class, 'setArea'])->name('settings.area');
+  Route::delete('/area/delete/{id}', [SettingsController::class, 'deleteArea'])->name('area.delete');
 
 
   // Route::get('/update', [UpdateController::class, 'update'])->name('update');

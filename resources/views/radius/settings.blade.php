@@ -76,6 +76,18 @@
                                 aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
                                     class="d-none d-sm-block">Premissions</span></button>
                         </li>
+                        <li class="nav-item">
+                          <button type="button" class="nav-link " data-bs-toggle="tab"
+                              data-bs-target="#form-tabs-zones" aria-controls="form-tabs-zones" role="tab"
+                              aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
+                                  class="d-none d-sm-block">Zones</span></button>
+                      </li>
+                      <li class="nav-item">
+                        <button type="button" class="nav-link " data-bs-toggle="tab"
+                            data-bs-target="#form-tabs-area" aria-controls="form-tabs-area" role="tab"
+                            aria-selected="false"><span class="ti ti-link ti-lg d-sm-none"></span><span
+                                class="d-none d-sm-block">Area</span></button>
+                    </li>
                         </ul>
                     </div>
                 </div>
@@ -410,7 +422,141 @@
                             </table>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="form-tabs-zones" role="tabpanel">
+                      <div>
+                          <form id="zone-form" action="{{ route('settings.zones') }}" method="POST">
+                              @csrf
+                              <input type="hidden" id="zone_id" name="zone_id" value="" />
+                              <div class="row g-6">
+                                  <div class="col-md-6">
+                                      <label class="form-label" for="zone_name">Name</label>
+                                      <input type="text" id="zone_name" name="zone_name" class="form-control"
+                                          placeholder="One" />
+                                  </div>
 
+
+                                  <div class="col-md-6">
+                                      <label class="form-label" for="description">Zone Description</label>
+                                      <input type="text" id="description_zone" name="description_zone"
+                                          class="form-control" placeholder="the new Zone" />
+                                  </div>
+                              </div>
+                              <div class="pt-6">
+                                  <button type="submit"  id="zone-submit-button"
+                                      class="btn btn-primary me-4">Submit</button>
+                                  <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                              </div>
+                          </form>
+                      </div>
+                      <hr>
+                      <div>
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th>Zone Name</th>
+
+                                      <th>Description</th>
+                                      <th>Actions</th> <!-- Added Actions header -->
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach ($zones as $zone)
+                                      <tr>
+                                          <td>{{ $zone->name }}</td>
+
+                                          <td>{{ $zone->description }}</td>
+                                          <td>
+                                              <button type="button"
+                                                  class="btn btn-secondary btn-sm me-2 edit-zone"
+                                                  data-zone-id="{{ $zone->id }}"
+                                                  data-zone-name="{{ $zone->name }}"
+                                                  data-zone-description="{{ $zone->description }}">Edit</button>
+
+                                              <button type="button" class="btn btn-danger btn-sm delete-zone"
+                                                  data-zone-id="{{ $zone->id }}"
+                                                  data-zone-url="{{ route('zone.delete', ['id' => $zone->id]) }}" disabled>Delete</button>
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="form-tabs-area" role="tabpanel">
+                    <div>
+                        <form id="shift-form" action="{{ route('settings.area') }}" method="POST">
+                            @csrf
+                            <input type="hidden" id="area_id" name="area_id" value="" />
+                            <div class="row g-6">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="area_name">Area Name</label>
+                                    <input type="text" id="area_name" name="area_name" class="form-control"
+                                        placeholder="One On" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label" for="shift_hours">Zone</label>
+                                    <div class="input-group">
+                                      <select class="form-control" name="zone_id" id="zone_id">
+                                        <option value=""></option>
+                                        @foreach ($zones as $zone)
+                                        <option value="{{$zone->id}}">{{$zone->name}}</option>
+                                        @endforeach
+
+                                      </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label" for="area_description">Area Description</label>
+                                    <input type="text" id="area_description" name="area_description"
+                                        class="form-control" placeholder="the new Area" />
+                                </div>
+                            </div>
+                            <div class="pt-6">
+                                <button type="submit"  id="area-submit-button"
+                                    class="btn btn-primary me-4">Submit</button>
+                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    <hr>
+                    <div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Area Name</th>
+                                    <th>Zone</th>
+                                    <th>Description</th>
+                                    <th>Actions</th> <!-- Added Actions header -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($areas as $area)
+                                    <tr>
+                                        <td>{{ $area->name }}</td>
+                                        <td>{{ $area->zone->name }}</td>
+                                        <td>{{ $area->description }}</td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-secondary btn-sm me-2 edit-area"
+                                                data-area-id="{{ $area->id }}"
+                                                data-area-name="{{ $area->name }}"
+                                                data-area-zone="{{ $area->zone_id }}"
+                                                data-area-description="{{ $area->description }}">Edit</button>
+
+                                            <button type="button" class="btn btn-danger btn-sm delete-area"
+                                                data-area-id="{{ $area->id }}"
+                                                data-area-url="{{ route('area.delete', ['id' => $area->id]) }}" disabled>Delete</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                     </div>
                 </div>
@@ -593,6 +739,107 @@
                         },
                         error: function(xhr) {
                             alert('An error occurred while deleting the office');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Handle Edit button click
+            $('.edit-zone').on('click', function() {
+                var zoneId = $(this).data('zone-id');
+                var zoneName = $(this).data('zone-name');
+                var zoneDescription = $(this).data('zone-description');
+
+
+                console.log('Zone ID:', zoneId);
+                console.log('Zone Name:', zoneName);
+                console.log('Zone Description:', zoneDescription);
+
+                // Populate the form fields
+                $('#zone_id').val(zoneId);
+                $('#zone_name').val(zoneName);
+                $('#description_zone').val(zoneDescription);
+
+                // Change the form action to update the shift
+                $('#zone-form').attr('action', '{{ route('settings.zones') }}');
+                $('#zone-submit-button').text('Update'); // Change button text to "Update"
+            });
+
+            // Handle Delete button click
+            $('.delete-zone').on('click', function() {
+                var shiftId = $(this).data('zone-id');
+                var deleteUrl = $(this).data('zone-url');
+
+                if (confirm('Are you sure you want to delete this zone?')) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(result) {
+                            alert(result.message);
+                            if (result.success) {
+                                location.reload(); // Reload the page or handle the DOM update
+                            }
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred while deleting the zone');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Handle Edit button click
+            $('.edit-area').on('click', function() {
+                var areaId = $(this).data('area-id');
+                var areaName = $(this).data('area-name');
+                var areaZone = $(this).data('area-zone');
+                var areaDescription = $(this).data('area-description');
+
+
+                console.log('Area ID:', areaId);
+                console.log('Shift Name:', areaName);
+                console.log('Shift Hours:', areaZone);
+                console.log('Shift Description:', areaDescription);
+
+                // Populate the form fields
+                $('#area_id').val(areaId);
+                $('#area_name').val(areaName);
+                $('#zone_id').val(areaZone);
+                $('#area_description').val(shiftDescription);
+
+                // Change the form action to update the shift
+                $('#area-form').attr('action', '{{ route('settings.area') }}');
+                $('#area-submit-button').text('Update'); // Change button text to "Update"
+            });
+
+            // Handle Delete button click
+            $('.delete-area').on('click', function() {
+                var areaId = $(this).data('area-id');
+                var deleteUrl = $(this).data('area-url');
+
+                if (confirm('Are you sure you want to delete this Area?')) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(result) {
+                            alert(result.message);
+                            if (result.success) {
+                                location.reload(); // Reload the page or handle the DOM update
+                            }
+                        },
+                        error: function(xhr) {
+                            alert('An error occurred while deleting the Area');
                         }
                     });
                 }

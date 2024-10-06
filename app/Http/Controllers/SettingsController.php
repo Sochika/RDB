@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Area;
 use App\Models\Role;
 use App\Models\GlobalSettings;
 use App\Models\Office;
 use App\Models\ShiftType;
+use App\Models\Zones;
 // use GlobalSettings;
 use Illuminate\Http\Request;
 
@@ -19,22 +21,15 @@ class SettingsController extends Controller
     $roles = Role::orderBy('level', 'asc')->get();
     $offices = Office::orderBy('level', 'asc')->get();
     $shift_types = ShiftType::get();
-    return view('radius.settings', compact('staff_radius', 'roles', 'shift_types', 'offices'));
+    $zones = Zones::get();
+    $areas = Area::get();
+    return view('radius.settings', compact('staff_radius', 'roles', 'shift_types', 'offices', 'zones', 'areas'));
   }
 
   public function setRoles(Request $request)
   {
 
-    // dd($request->input('role_id'));
 
-    // $validatedData = $request->validate([
-
-    //   'name' => 'required|string|max:255',
-    //   'salary' => 'required|integer',
-    //   'level' => 'required|integer',
-    //   'description' => 'nullable|string|max:255',
-
-    // ]);
     if ($request->input('role_id')) {
       $role = Role::find($request->input('role_id'));
       // dd($role);
@@ -49,7 +44,6 @@ class SettingsController extends Controller
         return back()->with('success', $request->input('name') . ' Role updated successfully.');
       }
       return back()->with('error', $request->input('name') . ' Role not updated/ not found.');
-      // return response()->json(['success' => false, 'message' => 'Role not found'], 404);
     } else {
       Role::create([
         'name' => $request->input('name'),
@@ -59,19 +53,13 @@ class SettingsController extends Controller
         'description' => $request->input('description')
         // Add other fields here
       ]);
-      // Role::create($request->all());
-      // return redirect()->route('settings')->with('success', 'Role created successfully.');
+
       return back()->with('success', $request->input('name') . ' Role created successfully.');
     }
   }
 
   public function deleteRole($id)
   {
-
-
-    // Role::where('id', $id)->delete();
-
-    // return back()->with('success', 'Role deleted successfully.');
     $role = Role::find($id);
 
     // Check if the role exists
@@ -198,5 +186,65 @@ class SettingsController extends Controller
 
     // Return an error response if the role does not exist
     return response()->json(['success' => false, 'message' => 'Office not found'], 404);
+  }
+
+
+  public function setZones(Request $request)
+  {
+
+
+
+    if ($request->input('zone_id')) {
+      $zone = Zones::find($request->input('zone_id'));
+      if ($zone) {
+        $zone->update([
+          'name' => $request->input('zone_name'),
+
+          'description' => $request->input('description_zone')
+        ]);
+        return back()->with('success', $request->input('zone_name') . ' Zone updated successfully.');
+      }
+      return back()->with('error', $request->input('zone_name') . ' Zone: something sent wrong.');
+    } else {
+
+      Zones::create([
+        'name' => $request->input('zone_name'),
+
+        'description' => $request->input('description_zone')
+        // Add other fields here
+      ]);
+      // Role::create($request->all());
+      // return redirect()->route('settings')->with('success', 'Role created successfully.');
+      return back()->with('success', $request->input('zone_name') . ' Zone created successfully.');
+    }
+  }
+
+  public function setArea(Request $request)
+  {
+
+
+
+    if ($request->input('area_id')) {
+      $area = Area::find($request->input('shift_id'));
+      if ($area) {
+        $area->update([
+          'name' => $request->input('area_name'),
+
+          'description' => $request->input('area_description')
+        ]);
+        return back()->with('success', $request->input('area_name') . ' Area updated successfully.');
+      }
+      return back()->with('error', $request->input('area_name') . ' Area: something sent wrong.');
+    } else {
+
+      Area::create([
+        'name' => $request->input('area_name'),
+        'zone_id' => $request->input('zone_id'),
+        'description' => $request->input('area_description')
+        // Add other fields here
+      ]);
+
+      return back()->with('success', $request->input('area_name') . ' Area created successfully.');
+    }
   }
 }
