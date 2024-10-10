@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\BeatLead;
 use App\Models\LeadDetail;
 use App\Models\Notes;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+// use PDF; // Add the DomPDF facade
 
 class AdminController extends Controller
 {
@@ -313,5 +315,74 @@ class AdminController extends Controller
     $recruit->save();
     // Return with a success message
     return redirect()->back()->with('success', $note->recruit->first_name . $note->recruit->last_name . ' updated successfully.');
+  }
+
+
+  public function getDailySitRep(Request $request)
+  {
+    // Get the month from the request, default to current month if not provided
+    $month = $request->input('month') ?? Carbon::now()->month;
+
+    // // Get the year from the request, default to current year if not provided
+    $year = $request->input('year') ?? Carbon::now()->year;
+
+    // // Fetch attendance data based on the given month and year
+    // $sitrep = Attendance::whereYear('attendance_date', $year)
+    //   ->whereMonth('attendance_date', $month)
+    //   ->groupBy('staff_id')
+    //   ->get();
+
+    $attendanceData = Attendance::select('staff_id', 'attendance_date', 'status', 'minutes_of_lateness')
+      ->whereYear('attendance_date', $year)
+      ->whereMonth('attendance_date', $month)
+      ->orderBy('attendance_date', 'asc')
+      ->get();
+
+    // Initialize an empty array to hold the final structured data
+    $sitrep = [];
+
+    foreach ($attendanceData as $attendance) {
+      // Format the date to 'Y-m-d' for easier indexing
+      $date = Carbon::parse($attendance->attendance_date)->format('Y-m-d');
+
+      // Organize data by staff_id and attendance date
+      $sitrep[$attendance->staff->first_name . ' ' . $attendance->staff->last_name . ' (' . $attendance->staff->gender . ')' . $attendance->staff->staff_no][$date] = [
+        'status' => $attendance->status,
+        'minutes_of_lateness' => $attendance->minutes_of_lateness,
+      ];
+    }
+
+    // Return the view and pass the $sitrep data to it
+    return view('radius.admin.sitrep', compact('sitrep', 'year', 'month'));
+  }
+
+  public function getAttendanceData(Request $request)
+  {
+    $monthYear = $request->input('month_year'); // e.g. '2024-10'
+    $year = Carbon::createFromFormat('Y-m', $monthYear)->year;
+    $month = Carbon::createFromFormat('Y-m', $monthYear)->month;
+
+    $attendances = Attendance::whereYear('attendance_date', $year)
+      ->whereMonth('attendance_date', $month)
+      ->get()
+      ->groupBy('staff_id');
+
+    // Transform the data into a structure that's easier to use in the front-end
+    $data = [];
+    foreach ($attendances as $staff_id => $records) {
+      $data[$staff_id] = [];
+      foreach ($records as $record) {
+        $data[$staff_id][$record->attendance_date] = [
+          'status' => $record->status,
+          'minutes_of_lateness' => $record->minutes_of_lateness,
+        ];
+      }
+    }
+
+    return response()->json([
+      'year' => $year,
+      'month' => $month,
+      'attendances' => $data,
+    ]);
   }
 }

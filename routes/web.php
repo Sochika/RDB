@@ -51,6 +51,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
   Route::post('/admin/get-week-recruits', [AdminController::class, 'admin.getWeekRecruits']);
   Route::post('/admin/get-week-leads', [AdminController::class, 'admin.getWeekLeads']);
   Route::post('/recruit/save', [AdminController::class, 'saveNote'])->name('recruit.save');
+  Route::get('/admin/sitrep', [AdminController::class, 'getDailySitRep'])->name('admin.sitrep');
+  // Route::get('/attendance/export-pdf', [AdminController::class, 'exportPDF'])->name('attendance.export-pdf');
+  Route::get('/admin/get-attendance-data', [AdminController::class, 'admin.getAttendanceData']);
+
 
 
   // Training
